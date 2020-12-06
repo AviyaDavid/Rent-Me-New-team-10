@@ -15,6 +15,7 @@ struct property
 	string near;
 	string amenities[10];//accessability,smoke,pet,balcony,wash,wifi,pool,bed_num room_num,rate
 	bool status;
+	int num_of_rates;
 };
 
 struct reservation
