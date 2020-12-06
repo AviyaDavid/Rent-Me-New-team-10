@@ -2,6 +2,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string>
+#include<iostream>
 using namespace std;
 struct date 
 {
@@ -45,4 +46,32 @@ struct landlord
 	traveler info;
 	bank_account transfer;
 	property* prop;
+};
+
+void print_properties(property* properties)
+{
+	for (int i = 0; i < sizeof(properties); i++)
+		print_property(properties[i]);
+};
+
+void print_property(property prop)
+{
+	cout << "Name: " << prop.p_name << "Description: " << prop.description << "Location: " << prop.location << "Capacity: " << prop.capacity << "Amenities: ";
+	string myarr[10] = { "Accessibility: ", "Smoking: ", "Pets: ", "Balcony", "Washing machine", "Wifi", "Pool", "Number of beds: ", "Number of rooms: ", "Rate: " };
+	for (int i = 0; i < 3; i++)
+		cout << myarr[i] << prop.amenities[i] << " ";
+	for (int i = 3; i < 7; i++)
+		if (prop.amenities[i] == "Yes")
+			cout << myarr[i] << " ";
+	for (int i = 7; i < 10; i++)
+		cout << myarr[i] << prop.amenities[i] << " ";
+	cout << endl;
+};
+
+void print_confirmation(property booked, date from, date to, int nights)
+{
+	print_property(booked);
+	cout << "Dates: " << from.day << '/' << from.month << '/' << from.year << " - " << to.day << '/' << to.month << '/' << to.year << endl;
+	cout << "Number of nights: " << nights << endl;
+	cout << "Final price: " << nights * booked.price << endl;
 };
