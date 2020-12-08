@@ -1,0 +1,6 @@
+﻿  main.cpp
+C:\Users\User\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\main.cpp(56,3): error C3861: 'print_property' : identificateur introuvable
+C:\Users\User\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\main.cpp(103,20): error C2676: '>=' binaire : 'date' ne définit pas cet opérateur ou une conversion vers un type acceptable pour l'opérateur prédéfini
+C:\Users\User\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\main.cpp(103,57): error C2676: '<=' binaire : 'date' ne définit pas cet opérateur ou une conversion vers un type acceptable pour l'opérateur prédéfini
+C:\Users\User\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\main.cpp(158,12): error C2440: 'return' : impossible de convertir de 'property **' en 'property *'
+C:\Users\User\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\main.cpp(158,9): message : Les types pointés n'ont aucun rapport entre eux ; conversion nécessitant reinterpret_cast, cast de style C ou cast de style fonction

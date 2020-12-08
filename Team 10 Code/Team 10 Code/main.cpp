@@ -112,3 +112,62 @@ property* search(property* prop_list, reservation* res_list)
 	return ads;
 }
 
+property* filter(string* filters, property* properties)
+{
+	property* ads;
+	bool relevant;
+	int count = 0;
+	for (int i = 0; i < sizeof(properties); i++)
+	{
+		relevant = true;
+		for (int j = 0; j < sizeof(filters); j++)
+			if (!(properties[i].amenities[j] == filters[j]))
+				relevant = false;
+		if (relevant)
+		{
+			count++;
+			ads = new property[count];
+			ads[count - 1] = properties[i];
+		}
+	}
+	return ads;
+}
+
+property* sort(property** ads, int sort_op)
+{
+	property* temp;
+	if (sort_op == 1) // by price low to high
+	{
+		for (int i = 0; i < sizeof(ads) - 1; i++)
+			for (int j = i + 1; j < sizeof(ads); j++)
+			    if (ads[i]->price > ads[j]->price)
+			    {
+					temp = ads[i];
+					ads[i] = ads[j];
+					ads[j] = temp;
+		        }
+	}
+	else if (sort_op == 2) // by price high to low
+	{
+		for (int i = 0; i < sizeof(ads) - 1; i++)
+			for (int j = i + 1; j < sizeof(ads); j++)
+				if (ads[i]->price < ads[j]->price)
+				{
+					temp = ads[i];
+					ads[i] = ads[j];
+					ads[j] = temp;
+				}
+	}
+	else if (sort_op == 3) // by rank high to low
+	{
+		for (int i = 0; i < sizeof(ads) - 1; i++)
+			for (int j = i + 1; j < sizeof(ads); j++)
+				if (ads[i]->num_of_rates < ads[j]->num_of_rates)
+				{
+					temp = ads[i];
+					ads[i] = ads[j];
+					ads[j] = temp;
+				}
+	}
+	return *ads;
+}
