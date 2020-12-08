@@ -7,6 +7,8 @@ using namespace std;
 struct date 
 {
 	int day, month, year;
+	// operator<=
+	// operator>=
 
 };
 struct property
@@ -75,3 +77,38 @@ void print_confirmation(property booked, date from, date to, int nights)
 	cout << "Number of nights: " << nights << endl;
 	cout << "Final price: " << nights * booked.price << endl;
 };
+
+property* search(property* prop_list, reservation* res_list)
+{
+	string loc;
+	date checkin;
+	date checkout;
+	int travelers;
+	property* ads;
+	bool available = true;
+	int count = 0;
+	cout << "Enter location: ";
+	cin >> loc;
+	cout << "Enter check in (dd/mm/yyyy): ";
+	cin >> checkin.day >> checkin.month >> checkin.year;
+	cout << "Enter check out (dd/mm/yyyy): ";
+	cin >> checkout.day >> checkout.month >> checkout.year;
+	cout << "Enter number of travelers: ";
+	cin >> travelers;
+	for (int i = 0; i < sizeof(prop_list); i++)
+	{
+		if (prop_list[i].location == loc && prop_list[i].capacity >= travelers)
+			for (int j = 0; j < sizeof(res_list); j++)
+				if (prop_list[i].p_name == res_list[j].p_name)
+					if (!(checkin >= res_list[j].check_out || checkout <= res_list[j].check_in))
+						available = false;
+		if (available)
+		{
+			count++;
+			ads = new property[count];
+			ads[count - 1] = prop_list[i];
+		}
+	}
+	return ads;
+}
+
