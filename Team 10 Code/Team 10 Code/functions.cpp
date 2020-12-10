@@ -372,7 +372,7 @@ void print_confirmation(property* booked, date from, date to, int nights)
 	cout << "Final price: " << nights * booked->price << endl;
 };
 
-void search(property** prop_list, reservation** res_list)
+property* search(property** prop_list, reservation** res_list)
 {
 	string loc;
 	date checkin;
@@ -381,7 +381,8 @@ void search(property** prop_list, reservation** res_list)
 	property** ads;
 	bool available = true;
 	int count = 0;
-	int choice;
+	int choice, am;
+	string amenities[10];
 	cout << "Enter location: ";
 	cin >> loc;
 	cout << "Enter check in (dd/mm/yyyy): ";
@@ -400,14 +401,60 @@ void search(property** prop_list, reservation** res_list)
 		if (available)
 		{
 			count++;
-			ads = new property*[count];
+			ads = new property * [count];
 			ads[count - 1] = prop_list[i];
 		}
 	}
-	print_properties(ads);
-	cout << endl << count + 1 << ". Filters" << count + 2 << ". Sort" << endl;
-	cout << "Choose an ad or optional options: ";
+	do {
+		print_properties(ads);
+		cout << endl << count + 1 << ". Filters" << count + 2 << ". Sort" << endl;
+		cout << "Choose an ad or option: ";
+		cin >> choice;
+		if (choice <= count)
+			return ads[choice];
+		if (choice == count + 1)
+		{
+			cout << "Accessibility ? 1.Yes 2.No" << endl;
+			yes_no(amenities, 0);
+			cout << "Smoking ? 1.Yes 2.No" << endl;
+			yes_no(amenities, 1);
+			cout << "Pets allowed ? 1.Yes 2.No" << endl;
+			yes_no(amenities, 2);
+			cout << "Balcony ? 1.Yes 2.No" << endl;
+			yes_no(amenities, 3);
+			cout << "Wahing machin ? 1.Yes 2.No" << endl;
+			yes_no(amenities, 4);
+			cout << "Wifi ? 1.Yes 2.No" << endl;
+			yes_no(amenities, 5);
+			cout << "Pool ? 1.Yes 2.No" << endl;
+			yes_no(amenities, 6);
+			cout << "Number of beds: ";
+			cin >> am;
+			amenities[7] = am;
+			cout << "Number of rooms: ";
+			cin >> am;
+			amenities[8] = am;
+			cout << "Rate: ";
+			cin >> am;
+			amenities[9] = am;
+			ads = filter(amenities, ads);
+		}
+		if (choice == count + 2)
+		{
+			cout << "Choose sort option:\n1.Price low to high   2.Price high to low   3.Rank high to low" << endl;
+			cin >> am;
+			ads = sort(ads, am);
+		}
+	} while (choice > count);
+}
+
+void yes_no(string am[10], int index)
+{
+	int choice;
 	cin >> choice;
+	if (choice == 1)
+		am[index] = "Yes";
+	else am[index] = "No";
 }
 
 property** filter(string* filters, property** properties)
