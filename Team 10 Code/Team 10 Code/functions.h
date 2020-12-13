@@ -9,9 +9,10 @@ date stringtodate(string str);
 property* read_properties();
 property* addprop(property* old, int p_len, property pr);
 
-void write_users(landlord* landlords, traveler* travelers);
-void write_reservations(reservation* reservations);
-void write_properties(property* properties);
+string datetostring(date d);
+void write_users(landlord* landlords, int land_len, traveler* travelers, int trav_len);
+void write_reservations(reservation* reservations, int res_len);
+void write_properties(property* properties, int p_len);
 
 traveler* traveler_login(traveler* travelers);
 traveler* traveler_signup(traveler** travelers, landlord* landlords);

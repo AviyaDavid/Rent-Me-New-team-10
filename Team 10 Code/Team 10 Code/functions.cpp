@@ -4,6 +4,7 @@
 #include <string.h>
 #include <fstream>
 #include <iostream>
+#include <ctime>
 #include "Structs.h"
 #include"functions.h"
 using namespace std;
@@ -16,8 +17,8 @@ void read_users(landlord* landlords, traveler* travelers)
 		cout << "ERROR USERS FILE DOES NOT EXIST" << endl;
 		return;
 	}
-	string flag ;//if landlord it will be 0
-	int landi = 0,travi=0;//index for traveler array and landlord array
+	string flag;//if landlord it will be 0
+	int landi = 0, travi = 0;//index for traveler array and landlord array
 	landlord templ;//temporary landlord
 	traveler tempt;//temporary traveler
 	string tempd;//temp for date insert
@@ -25,7 +26,7 @@ void read_users(landlord* landlords, traveler* travelers)
 	{
 		getline(users, flag, ',');
 		if (flag.compare("1") == 0)//if landlord
-		{
+		{//recieve all landlord details from file
 			getline(users, templ.info.id, ',');
 			getline(users, templ.info.f_name, ',');
 			getline(users, templ.info.l_name, ',');
@@ -37,7 +38,7 @@ void read_users(landlord* landlords, traveler* travelers)
 			templ.transfer.due = stringtodate(tempd);
 			tempd = '\0';
 			getline(users, templ.transfer.cvv, '\n');
-			
+
 			landlords[landi] = templ;
 			landi++;
 		}
@@ -64,38 +65,38 @@ reservation* read_reservation()
 		cout << "ERROR USERS FILE DOES NOT EXIST" << endl;
 		return;
 	}
-	int r_len=0;
-	reservation* rList=NULL;
+	int r_len = 0;
+	reservation* rList = NULL;
 	reservation temp;
-	string tempstr='\0';
+	string tempstr = '\0';
 	while (!reservations.eof())
 	{
-			r_len ++;
-			getline(reservations, temp.p_name, ',');
-			getline(reservations, temp.renter_id, ',');
-			getline(reservations, tempstr, ',');
-			temp.check_in = stringtodate(tempstr);
-			tempstr = '\0';
-			getline(reservations, tempstr, ',');
-			temp.check_out = stringtodate(tempstr);
-			tempstr = '\0';
-			getline(reservations, temp.loc, ',');
-			getline(reservations, tempstr, ',');
-			temp.rate = stoi(tempstr);
-			tempstr = '\0';
-			getline(reservations, tempstr, '\n');
-			if (stoi(tempstr) == 1)
-				temp.israted = true;
-			else
-				temp.israted = false;
-			rList = addarr(rList,r_len, temp);
+		r_len++;
+		getline(reservations, temp.p_name, ',');
+		getline(reservations, temp.renter_id, ',');
+		getline(reservations, tempstr, ',');
+		temp.check_in = stringtodate(tempstr);
+		tempstr = '\0';
+		getline(reservations, tempstr, ',');
+		temp.check_out = stringtodate(tempstr);
+		tempstr = '\0';
+		getline(reservations, temp.loc, ',');
+		getline(reservations, tempstr, ',');
+		temp.rate = stoi(tempstr);
+		tempstr = '\0';
+		getline(reservations, tempstr, '\n');
+		if (stoi(tempstr) == 1)
+			temp.israted = true;
+		else
+			temp.israted = false;
+		rList = addarr(rList, r_len, temp);
 	}
 	reservations.close();
 	return rList;
 }
-reservation* addarr(reservation* old,int r_len,reservation res)
+reservation* addarr(reservation* old, int r_len, reservation res)
 {
-	reservation* newArr= new reservation[r_len];
+	reservation* newArr = new reservation[r_len];
 	if (!newArr)
 	{
 		cout << " Memory allocation failed!" << endl;
@@ -180,9 +181,104 @@ property* addprop(property* old, int p_len, property pr)
 	old = newArr;
 	return old;
 }
-void write_users(landlord* landlords, traveler* travelers){}
-void write_reservations(reservation* reservations){}
-void write_properties(property* properties){}
+
+string datetostring(date d)
+{
+	string date = "/0";
+	string day = to_string(d.day);
+	string month = to_string(d.month);
+	string year = to_string(d.year);
+	if (day.length() == 1)
+		date = '0' + day;
+	else
+		date = day;
+	date.append("/");
+	if (month.length() == 1)
+		date.append('0' + month);
+	else
+		date = month;
+	date.append("/");
+	if (year.length() == 2)
+		date.append(year);
+	else
+		date.append(year.substr(3, 2));
+	return date;
+}
+void write_users(landlord* landlords, int land_len, traveler* travelers, int trav_len)
+{
+	ofstream p_users;
+	p_users.open("usersDB.csv", ios::out || ios::app); //pointer to write into file
+	for (int i = 0; i < land_len; i++)
+	{
+		string duedate = datetostring(landlords[i].transfer.due);
+		p_users << 1 << ", "
+			<< landlords[i].info.id << ", "
+			<< landlords[i].info.f_name << ", "
+			<< landlords[i].info.l_name << ", "
+			<< landlords[i].info.p_num << ", "
+			<< landlords[i].info.email << ", "
+			<< landlords[i].info.password << ", "
+			<< landlords[i].transfer.card_num << ", "
+			<< duedate << ", "
+			<< landlords[i].transfer.cvv
+			<< "\n";
+	}
+	for (int i = 0; i < trav_len; i++)
+	{
+		p_users << 0 << ", "
+			<< travelers[i].id << ", "
+			<< travelers[i].f_name << ", "
+			<< travelers[i].l_name << ", "
+			<< travelers[i].p_num << ", "
+			<< travelers[i].email << ", "
+			<< travelers[i].password
+			<< "\n";
+	}
+
+	p_users.close();
+}
+void write_reservations(reservation* reservations, int res_len)
+{
+	ofstream p_reservation;
+	p_reservation.open("reservationDB.csv", ios::out || ios::app); //pointer to write into file
+	for (int i = 0; i < res_len; i++)
+	{
+		string checkin = datetostring(reservations[i].check_in);
+		string checkout = datetostring(reservations[i].check_out);
+
+		p_reservation << reservations[i].p_name << ", "
+			<< reservations[i].renter_id << ", "
+			<< checkin << ", "
+			<< checkout << ", "
+			<< reservations[i].loc << ", "
+			<< reservations[i].rate << ", "
+			<< reservations[i].israted
+			<< "\n";
+	}
+	p_reservation.close();
+
+}
+void write_properties(property* properties, int p_len)
+{
+	ofstream p_prop;
+	p_prop.open("reservationDB.csv", ios::out || ios::app); //pointer to write into file
+	for (int i = 0; i < p_len; i++)
+	{
+		p_prop << properties[i].owner_id << ", "
+			<< properties[i].description << ", "
+			<< properties[i].p_name << ", "
+			<< properties[i].location << ", "
+			<< properties[i].price << ", "
+			<< properties[i].capacity << ", "
+			<< properties[i].near << ", ";
+		for (int j = 0; j < 10; j++)
+			p_prop << properties[i].amenities[j] << ", ";
+		p_prop << properties[i].status << ", "
+			<< properties[i].num_of_rates
+			<< "\n";
+	}
+	p_prop.close();
+}
 
 traveler* traveler_login(traveler* travelers)
 {
@@ -383,12 +479,24 @@ property* search(property** prop_list, reservation** res_list)
 	int count = 0;
 	int choice, am;
 	string amenities[10];
+	time_t current = time(0);
+	tm* ltm = localtime(&current);
+	date current_date;
+	current_date.day = ltm->tm_mday;
+	current_date.month = ltm->tm_mon;
+	current_date.year = ltm->tm_year;
 	cout << "Enter location: ";
 	cin >> loc;
-	cout << "Enter check in (dd/mm/yyyy): ";
-	cin >> checkin.day >> checkin.month >> checkin.year;
-	cout << "Enter check out (dd/mm/yyyy): ";
-	cin >> checkout.day >> checkout.month >> checkout.year;
+	do {
+		cout << "Enter check in (dd/mm/yyyy): ";
+		cin >> checkin.day >> checkin.month >> checkin.year;
+		cout << "Enter check out (dd/mm/yyyy): ";
+		cin >> checkout.day >> checkout.month >> checkout.year;
+		if (checkin < current_date)
+			cout << "Error: this date is due. Please enter new dates." << endl;
+		if (checkout <= checkin)
+			cout << "Error: checkout must be after checkin. Please enter new dates." << endl;
+	} while (checkout <= checkin || checkin < current_date);
 	cout << "Enter number of travelers: ";
 	cin >> travelers;
 	for (int i = 0; i < sizeof(prop_list); i++)
