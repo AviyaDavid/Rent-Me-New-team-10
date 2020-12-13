@@ -443,6 +443,7 @@ void print_properties(property** properties)
 	{
 		cout << i + 1;
 		print_property(properties[i]);
+		cout << "___________________________________" << endl;
 	}
 };
 
@@ -468,7 +469,7 @@ void print_confirmation(property* booked, date from, date to, int nights)
 	cout << "Final price: " << nights * booked->price << endl;
 };
 
-property* search(property** prop_list, reservation** res_list)
+property* search(property** prop_list, reservation** res_list) // search process RETURN: pointer to the chosen property to rent
 {
 	string loc;
 	date checkin;
@@ -565,7 +566,7 @@ void yes_no(string am[10], int index)
 	else am[index] = "No";
 }
 
-property** filter(string* filters, property** properties)
+property** filter(string* filters, property** properties) 
 {
 	property** ads;
 	bool relevant;
@@ -839,11 +840,7 @@ property** editMenu(landlord* host, property** properties, int* size_of_properti
 	int check = 0;
 	string name;
 	cout << "Properties list:" << endl;
-	for (int i = 0; i < *size_of_properties; i++)
-	{
-		cout << (*host).prop[i] << endl;
-		cout << "________________________________________________" << endl;
-	}
+	print_properties(host->prop);
 	cout << "For Edit property press 1" << endl;
 	cout << "For Delete property press 2" << endl;
 	cout << "For Exit press 0" << endl;
