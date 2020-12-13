@@ -329,32 +329,32 @@ traveler* traveler_signup(traveler** travelers, landlord* landlords)
 		cin >> id;
 	} while (id == (*travelers[i]).id || id == landlords[i].info.id);
 	size++;
-	traveler** temp = new traveler * [size];//éöéøú îòøê æîðé ìîàâø
+	traveler** temp = new traveler * [size];//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 	for (int i = 0; i < size - 1; i++)
 	{
-		temp[i]->email = travelers[i]->email;//äòú÷ú äîòøê ä÷ééí ìæîðé
+		temp[i]->email = travelers[i]->email;//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 		temp[i]->f_name = travelers[i]->f_name;
 		temp[i]->id = travelers[i]->id;
 		temp[i]->l_name = travelers[i]->l_name;
 		temp[i]->password = travelers[i]->password;
 		temp[i]->p_num = travelers[i]->p_num;
 	}
-	temp[size]->id = id;//äïñôä ùì äàãí äçãù ìîòøê
+	temp[size]->id = id;//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 	temp[size]->f_name = f_name;
 	temp[size]->l_name = l_name;
 	temp[size]->password = password;
 	temp[size]->p_num = p_num;
 	temp[size]->email = email;
-	delete[] * travelers;//ùçøåø äîòøê
-	travelers = new traveler * [size];//éöéøú îòøê æîðé ìîàâø
+	delete[] * travelers;//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+	travelers = new traveler * [size];//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 	for (int i = 0; i < size; i++)
 	{
-		travelers[i]->email = temp[i]->email;//äòú÷ú äîòøê ä÷ééí ìæîðé
+		travelers[i]->email = temp[i]->email;//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 		travelers[i]->f_name = temp[i]->f_name;
 		travelers[i]->id = temp[i]->id;
 		travelers[i]->l_name = temp[i]->l_name;
 		travelers[i]->password = temp[i]->password;
-		travelers[i]->p_num = temp[i]->p_num;;//äòú÷ú äîòøê ä÷ééí ìæîðé
+		travelers[i]->p_num = temp[i]->p_num;;//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 	}
 	return *travelers;
 }
@@ -407,32 +407,32 @@ landlord* landlord_signup(landlord** landlords, traveler* travelers)
 		cin >> id;
 	} while (id == (*landlords[i]).info.id || id == travelers[i].id);
 	size++;
-	landlord** temp = new landlord * [size];//éöéøú îòøê æîðé ìîàâø
+	landlord** temp = new landlord * [size];//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 	for (int i = 0; i < size - 1; i++)
 	{
-		temp[i]->info.email = landlords[i]->info.email;//äòú÷ú äîòøê ä÷ééí ìæîðé
+		temp[i]->info.email = landlords[i]->info.email;//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 		temp[i]->info.f_name = landlords[i]->info.f_name;
 		temp[i]->info.id = landlords[i]->info.id;
 		temp[i]->info.l_name = landlords[i]->info.l_name;
 		temp[i]->info.password = landlords[i]->info.password;
 		temp[i]->info.p_num = landlords[i]->info.p_num;
 	}
-	temp[size]->info.id = id;//äïñôä ùì äàãí äçãù ìîòøê
+	temp[size]->info.id = id;//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 	temp[size]->info.f_name = f_name;
 	temp[size]->info.l_name = l_name;
 	temp[size]->info.password = password;
 	temp[size]->info.p_num = p_num;
 	temp[size]->info.email = email;
-	delete[] landlords;//ùçøåø äîòøê
-	landlords = new landlord * [size];//éöéøú îòøê æîðé ìîàâø
+	delete[] landlords;//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+	landlords = new landlord * [size];//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 	for (int i = 0; i < size; i++)
 	{
-		landlords[i]->info.email = temp[i]->info.email;//äòú÷ú äîòøê ä÷ééí ìæîðé
+		landlords[i]->info.email = temp[i]->info.email;//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 		landlords[i]->info.f_name = temp[i]->info.f_name;
 		landlords[i]->info.id = temp[i]->info.id;
 		landlords[i]->info.l_name = temp[i]->info.l_name;
 		landlords[i]->info.password = temp[i]->info.password;
-		landlords[i]->info.p_num = temp[i]->info.p_num;;//äòú÷ú äîòøê ä÷ééí ìæîðé
+		landlords[i]->info.p_num = temp[i]->info.p_num;;//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 	}
 	return *landlords;
 }
@@ -626,4 +626,509 @@ property** sort(property** ads, int sort_op)
 }
 
 
+reservation** payment(property* chosen, traveler renter, reservation** reservations, int* size_of_reservations, date chek_in, date chek_out)
+{
+	string cvv, card_num, card_owner_id;
+	date due;
+	cout << "Number of card:" << endl;
+	cin >> card_num;
+	cout << "Card owner ID:" << endl;
+	cin >> card_owner_id;
+	cout << "Due date number:" << endl;
+	cout << "Month: ";
+	cin >> due.month;
+	int courrent_month = 12;
+	int courrent_year = 2020;
+	while (due.month > 12 || due.month < 1 || due.month < courrent_month)
+	{
+		cout << "Incorrect month. Please enter again" << endl;
+		cin >> due.month;
+	}
+	cout << "Year: ";
+	cin >> due.year;
+	while (due.year < courrent_year)
+	{
+		cout << "Invalid year. Please enter again" << endl;
+		cin >> due.year;
+	}
+	cout << "CVV: " << endl;
+	cin >> cvv;
+	while (sizeof(cvv) != 4)
+	{
+		cout << "Wrong input, CVV should be only for 3 digits. Please enter again" << endl;
+		cin >> cvv;
+	}
+	reservation* new_reservation;
+	(*new_reservation).p_name = (*chosen).p_name;
+	(*new_reservation).renter_id = renter.id;
+	(*new_reservation).loc = (*chosen).location;
+	(*new_reservation).check_in = chek_in;
+	(*new_reservation).check_out = chek_out;
+	(*new_reservation).rate = 0;
+	(*new_reservation).israted = false;
 
+	reservation** temp = new reservation * [*size_of_reservations + 1];
+	for (int i = 0; i < *size_of_reservations; i++)
+	{
+		temp[i] = reservations[i];
+	}
+	temp[*size_of_reservations + 1] = new_reservation;
+	*size_of_reservations += 1;
+	for (int i = 0; i < *size_of_reservations; i++)
+	{
+		delete reservations[i];
+	}
+	reservation* reservations = new reservation[*size_of_reservations];
+	for (int i = 0; i < *size_of_reservations; i++)
+	{
+		reservations[i] = temp[i];
+	}
+	for (int i = 0; i < *size_of_reservations; i++)
+	{
+		delete temp[i];
+	}
+
+	return reservations;
+
+}
+property** add_property(landlord host, property** properties, int* size_of_properties)
+{
+	int x;
+	property* new_property;
+	cout << "Owner ID: " << endl;
+	cin >> (*new_property).owner_id;
+	cout << endl;
+	cout << "Description: " << endl;
+	cin >> (*new_property).description;
+	cout << endl;
+	cout << "Property name: " << endl;
+	cin >> (*new_property).p_name;
+	cout << endl;
+	cout << "Location: " << endl;
+	cin >> (*new_property).location;
+	cout << endl;
+	cout << "Price per night: " << endl;
+	cin >> (*new_property).price;
+	while ((*new_property).price < 0)
+	{
+		cout << "Wrong input, price should be a possitive number. Please enter again" << endl;
+		cin >> (*new_property).price;
+	}
+	cout << endl;
+	cout << "Capasity: " << endl;
+	cin >> (*new_property).capacity;
+	while ((*new_property).capacity < 0)
+	{
+		cout << "Wrong input, capasity should be a possitive number. Please enter again" << endl;
+		cin >> (*new_property).capacity;
+	}
+	cout << endl;
+	cout << "Nearby Attractions: " << endl;
+	cin >> (*new_property).near;
+	cout << endl;
+	cout << "Availability: \n1.Yes \n else-No" << endl;
+	cin >> x;
+	if (x == 1)
+		new_property->status = true;
+	else
+	{
+		new_property->status = false;
+	}
+	new_property->num_of_rates = 0;
+	cout << "Acessability: \n1.Yes \n else-No" << endl;
+	cin >> x;
+	if (x == 1)
+		new_property->amenities[0] = "Yes";
+	else
+	{
+		new_property->amenities[0] = "No";
+	}
+	cout << "Smoke: \n1.Yes \n else-No" << endl;
+	cin >> x;
+	if (x == 1)
+		new_property->amenities[1] = "Yes";
+	else
+	{
+		new_property->amenities[1] = "No";
+	}
+	cout << "Pet: \n1.Yes \n else-No" << endl;
+	cin >> x;
+	if (x == 1)
+		new_property->amenities[2] = "Yes";
+	else
+	{
+		new_property->amenities[2] = "No";
+	}
+	cout << "Balcony: \n1.Yes \n else-No" << endl;
+	cin >> x;
+	if (x == 1)
+		new_property->amenities[3] = "Yes";
+	else
+	{
+		new_property->amenities[3] = "No";
+	}
+	cout << "Wash: \n1.Yes \n else-No" << endl;
+	cin >> x;
+	if (x == 1)
+		new_property->amenities[4] = "Yes";
+	else
+	{
+		new_property->amenities[4] = "No";
+	}
+	cout << "Wi-Fi: \n1.Yes \n else-No" << endl;
+	cin >> x;
+	if (x == 1)
+		new_property->amenities[5] = "Yes";
+	else
+	{
+		new_property->amenities[5] = "No";
+	}
+	cout << "Pool: \n1.Yes \n else-No" << endl;
+	cin >> x;
+	if (x == 1)
+		new_property->amenities[6] = "Yes";
+	else
+	{
+		new_property->amenities[6] = "No";
+	}
+	cout << "Numbers of beds: ";
+	int y;
+	cin >> y;
+	while (y < 0)
+	{
+		cout << "Wrong input. Please enter again" << endl;
+		cin >> y;
+	}
+	new_property->amenities[7] = to_string(y);
+	cout << "Numbers of rooms: ";
+	while (y < 0)
+	{
+		cout << "Wrong input. Please enter again" << endl;
+		cin >> y;
+	}
+	new_property->amenities[8] = to_string(y);
+	new_property->amenities[9] = '0';
+	property** temp = new property * [*size_of_properties + 1];
+	for (int i = 0; i < *size_of_properties; i++)
+	{
+		temp[i] = (properties)[i];
+	}
+	temp[*size_of_properties + 1] = new_property;
+	*size_of_properties += 1;
+	for (int i = 0; i < *size_of_properties; i++)
+	{
+		delete properties[i];
+	}
+	property** properties = new property * [*size_of_properties];
+	for (int i = 0; i < *size_of_properties; i++)
+	{
+		properties[i] = temp[i];
+	}
+	for (int i = 0; i < *size_of_properties; i++)
+	{
+		delete temp[i];
+	}
+
+	return properties;
+}
+
+property** editMenu(landlord* host, property** properties, int* size_of_properties)
+{
+	int x, y;
+	int flag = 0;
+	int check = 0;
+	string name;
+	cout << "Properties list:" << endl;
+	for (int i = 0; i < *size_of_properties; i++)
+	{
+		cout << (*host).prop[i] << endl;
+		cout << "________________________________________________" << endl;
+	}
+	cout << "For Edit property press 1" << endl;
+	cout << "For Delete property press 2" << endl;
+	cout << "For Exit press 0" << endl;
+	cin >> x;
+	while (x != 0)
+	{
+		while (x != 1 || x != 2)
+		{
+			cout << "Wrong input. Please enter again" << endl;
+			cin >> x;
+		}
+		cout << "Enter the name of the property you want to Edit/Delete" << endl;
+		cin >> name;
+		for (int i = 0; i < *size_of_properties; i++)
+		{
+			flag++;
+			if (name == properties[i]->p_name)
+			{
+				check = 1;
+				break;
+			}
+
+		}
+		flag--;
+		if (check == 1)
+		{
+			if (x == 1)
+			{
+				edit((*host).prop[flag]);
+				cout << "Property updated." << endl;
+			}
+			if (x == 2)
+			{
+				deletep((*host).prop[flag], properties, size_of_properties);
+				cout << "Property deleted." << endl;
+			}
+		}
+		else
+		{
+			cout << "Name was not found in the list." << endl;
+		}
+		cout << "For Edit property press 1" << endl;
+		cout << "For Delete property press 2" << endl;
+		cout << "For Exit press 0" << endl;
+		cin >> x;
+	}
+
+	return properties;
+
+}
+property* edit(property* old_prop)
+{
+	int x;
+	cout << "Edit Property:" << endl;
+	cout << " Press: \n 0-Exit \n 1-Owner Id \n 2-Description \n 3- Property name \n 4-Location \n 5- Price per night \n 6-Capasity \n 7-Nearby Attractions \n 8- Availability \n 9-Amenities \n10-Number of rates" << endl;
+	cin >> x;
+	while (x != 0)
+	{
+		switch (x)
+		{
+		case 1:
+			cout << "Enter a new Owner ID: " << endl;
+			cin >> (*old_prop).owner_id;
+			cout << endl;
+			break;
+		case 2:
+			cout << "Enter a new Description: " << endl;
+			cin >> (*old_prop).description;
+			cout << endl;
+			break;
+		case 3:
+			cout << "Enter a new Property name: " << endl;
+			cin >> (*old_prop).p_name;
+			cout << endl;
+			break;
+		case 4:
+			cout << "Enter a new Location: " << endl;
+			cin >> (*old_prop).location;
+			cout << endl;
+			break;
+		case 5:
+			cout << "Enter a new Price per night: " << endl;
+			cin >> (*old_prop).price;
+			while ((*old_prop).price < 0)
+			{
+				cout << "Wrong input, price should be a possitive number. Please enter again" << endl;
+				cin >> (*old_prop).price;
+			}
+			cout << endl;
+			break;
+		case 6:
+			cout << "Enter a new Capasity: " << endl;
+			cin >> (*old_prop).capacity;
+			while ((*old_prop).capacity < 0)
+			{
+				cout << "Wrong input, capasity should be a possitive number. Please enter again" << endl;
+				cin >> (*old_prop).capacity;
+			}
+			cout << endl;
+			break;
+		case 7:
+			cout << "Enter a new Nearby Attractions: " << endl;
+			cin >> (*old_prop).near;
+			cout << endl;
+			break;
+		case 8:
+			cout << "Availability: \n1.Yes \n else-No" << endl;
+			cin >> x;
+			if (x == 1)
+				(*old_prop).status = true;
+			else
+			{
+				(*old_prop).status = false;
+			}
+			cout << endl;
+			break;
+		case 9:
+			int y;
+			cout << "Amenities: \n Press: \n 0-Exit\n1-Accessability \n2-Smoke \n3-Pet \n4-Balcony \n5-Wash \n6-Wi-Fi \n 7-Pool \n 8-Number of beds \n9-Number of rooms \n10-Rate \n";
+			cin >> y;
+			while (y != 0)
+			{
+				switch (y)
+				{
+				case 1:
+					cout << "Edit Acessability: \n1.Yes \n else-No" << endl;
+					cin >> x;
+					if (x == 1)
+						(*old_prop).amenities[0] = "Yes";
+					else
+					{
+						(*old_prop).amenities[0] = "No";
+					}
+					break;
+				case 2:
+					cout << "Smoke: \n1.Yes \n else-No" << endl;
+					cin >> x;
+					if (x == 1)
+						(*old_prop).amenities[1] = "Yes";
+					else
+					{
+						(*old_prop).amenities[1] = "No";
+					}
+					break;
+				case 3:
+					cout << "Pet: \n1.Yes \n else-No" << endl;
+					cin >> x;
+					if (x == 1)
+						(*old_prop).amenities[2] = "Yes";
+					else
+					{
+						(*old_prop).amenities[2] = "No";
+					}
+					break;
+				case 4:
+					cout << "Balcony: \n1.Yes \n else-No" << endl;
+					cin >> x;
+					if (x == 1)
+						(*old_prop).amenities[3] = "Yes";
+					else
+					{
+						(*old_prop).amenities[3] = "No";
+					}
+					break;
+				case 5:
+					cout << "Wash: \n1.Yes \n else-No" << endl;
+					cin >> x;
+					if (x == 1)
+						(*old_prop).amenities[4] = "Yes";
+					else
+					{
+						(*old_prop).amenities[4] = "No";
+					}
+					break;
+				case 6:
+					cout << "Wi-Fi: \n1.Yes \n else-No" << endl;
+					cin >> x;
+					if (x == 1)
+						(*old_prop).amenities[5] = "Yes";
+					else
+					{
+						(*old_prop).amenities[5] = "No";
+					}
+					break;
+				case 7:
+					cout << "Pool: \n1.Yes \n else-No" << endl;
+					cin >> x;
+					if (x == 1)
+						(*old_prop).amenities[6] = "Yes";
+					else
+					{
+						(*old_prop).amenities[6] = "No";
+					}
+					break;
+				case 8:
+					int s;
+					cout << "Edit number of beds: ";
+					cin >> s;
+					while (s < 0)
+					{
+						cout << "Wrong input. Please enter again" << endl;
+						cin >> s;
+					}
+					(*old_prop).amenities[7] = to_string(s);
+					break;
+				case 9:
+					int k;
+					cout << "Edit Number of rooms: ";
+					while (k < 0)
+					{
+						cout << "Wrong input. Please enter again" << endl;
+						cin >> k;
+					}
+					(*old_prop).amenities[8] = to_string(k);
+					break;
+				case 10:
+					int z;
+					cout << "Edit rate: ";
+					while (z < 0)
+					{
+						cout << "Wrong input. Please enter again" << endl;
+						cin >> z;
+					}
+					(*old_prop).amenities[9] = to_string(z);
+					break;
+
+				default:
+					cout << "Wrong input. Please enter again" << endl;
+					break;
+				}
+				cout << "Amenities: \n Press: \n 0-Exit\n1-Accessability \n2-Smoke \n3-Pet \n4-Balcony \n5-Wash \n6-Wi-Fi \n 7-Pool \n 8-Number of beds \n9-Number of rooms \n10-Rate \n";
+				cin >> y;
+
+			}
+		case 10:
+			cout << "Edit  number of rates: ";
+			cin >> (*old_prop).num_of_rates;
+			while ((*old_prop).num_of_rates < 0)
+			{
+				cout << "Wrong input. Please enter again" << endl;
+				cin >> (*old_prop).num_of_rates;
+			}
+			break;
+
+		default:
+			cout << "Wrong input. Please enter again" << endl;
+			break;
+		}
+		cout << " Press: \n 0-Exit \n 1-Owner Id \n 2-Description \n 3- Property name \n 4-Location \n 5- Price per night \n 6-Capasity \n 7-Nearby Attractions \n 8- Availability \n 9-Amenities \n10-Number of rates" << endl;
+		cin >> x;
+
+	}
+
+	return old_prop;
+
+}
+property** deletep(property* p_chosen, property** properties, int* size_of_properties)
+{
+	int chek = 0;
+	for (int i = 0; i < *size_of_properties; i++)
+	{
+		if ((*properties[i]).p_name == (*p_chosen).p_name)
+		{
+			chek = 1;
+		}
+	}
+	if (chek == 1)
+	{
+		property** temp = new property * [*size_of_properties];
+		for (int i = 0; i < *size_of_properties; i++)
+		{
+			if ((*properties[i]).p_name != (*p_chosen).p_name)
+			{
+				temp[i] = properties[i];
+			}
+
+		}
+		delete[]properties;
+		*size_of_properties -= 1;
+		property** properties = new property * [*size_of_properties];
+		for (int i = 0; i < *size_of_properties; i++)
+		{
+			properties[i] = temp[i];
+		}
+		delete[]temp;
+	}
+	return properties;
+}
