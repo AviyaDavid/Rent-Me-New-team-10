@@ -437,7 +437,7 @@ landlord* landlord_signup(landlord** landlords, traveler* travelers)
 	return *landlords;
 }
 
-void print_properties(property** properties)
+void print_properties(property** properties) // print all the properties in the properties list
 {
 	for (int i = 0; i < sizeof(properties); i++)
 	{
@@ -447,7 +447,7 @@ void print_properties(property** properties)
 	}
 };
 
-void print_property(property* prop)
+void print_property(property* prop) // print all the details about a property
 {
 	cout << ". Name: " << prop->p_name << "\n Description: " << prop->description << "\n Location: " << prop->location << "\n Capacity: " << prop->capacity << "\n Amenities: ";
 	string myarr[10] = { "Accessibility: ", "Smoking: ", "Pets: ", "Balcony", "Washing machine", "Wifi", "Pool", "Number of beds: ", "Number of rooms: ", "Rate: " };
@@ -461,7 +461,7 @@ void print_property(property* prop)
 	cout << endl;
 };
 
-void print_confirmation(property* booked, date from, date to, int nights)
+void print_confirmation(property* booked, date from, date to, int nights) // print a confirmation with order main details
 {
 	print_property(booked);
 	cout << "Dates: " << from.day << '/' << from.month << '/' << from.year << " - " << to.day << '/' << to.month << '/' << to.year << endl;
@@ -469,21 +469,21 @@ void print_confirmation(property* booked, date from, date to, int nights)
 	cout << "Final price: " << nights * booked->price << endl;
 };
 
-property* search(property** prop_list, reservation** res_list) // search process RETURN: pointer to the chosen property to rent
+property* search(property** prop_list, reservation** res_list) // search process. RETURN: pointer to the chosen property to rent
 {
-	string loc;
-	date checkin;
-	date checkout;
-	int travelers;
-	property** ads;
-	bool available = true;
-	int count = 0;
-	int choice, am;
-	string amenities[10];
-	time_t current = time(0);
+	string loc; // location
+	date checkin; // date for checkin
+	date checkout; // date for checkout
+	int travelers; // number of travelers
+	property** ads; // relevant ads list
+	bool available = true; // availability
+	int count = 0; // number of relevant ads
+	int choice, am; // menu choice 
+	string amenities[10]; // array of selected amenities for search process
+	time_t current = time(0); 
 	tm* ltm = localtime(&current);
-	date current_date;
-	current_date.day = ltm->tm_mday;
+	date current_date; // current date 
+	current_date.day = ltm->tm_mday; 
 	current_date.month = ltm->tm_mon;
 	current_date.year = ltm->tm_year;
 	cout << "Enter location: ";
@@ -502,26 +502,26 @@ property* search(property** prop_list, reservation** res_list) // search process
 	cin >> travelers;
 	for (int i = 0; i < sizeof(prop_list); i++)
 	{
-		if (prop_list[i]->location == loc && prop_list[i]->capacity >= travelers)
-			for (int j = 0; j < sizeof(res_list); j++)
-				if (prop_list[i]->p_name == res_list[j]->p_name)
+		if (prop_list[i]->location == loc && prop_list[i]->capacity >= travelers) // search by location and capacity
+			for (int j = 0; j < sizeof(res_list); j++) 
+				if (prop_list[i]->p_name == res_list[j]->p_name) // verifing availability
 					if (!(checkin >= res_list[j]->check_out || checkout <= res_list[j]->check_in))
 						available = false;
 		if (available)
 		{
 			count++;
 			ads = new property * [count];
-			ads[count - 1] = prop_list[i];
+			ads[count - 1] = prop_list[i]; // add the property to the relevant ads list
 		}
 	}
 	do {
-		print_properties(ads);
+		print_properties(ads); 
 		cout << endl << count + 1 << ". Filters" << count + 2 << ". Sort" << endl;
 		cout << "Choose an ad or option: ";
 		cin >> choice;
-		if (choice <= count)
-			return ads[choice];
-		if (choice == count + 1)
+		if (choice <= count) // if a property is chosen
+			return ads[choice]; // return it
+		if (choice == count + 1) // if filter option selected 
 		{
 			cout << "Accessibility ? 1.Yes 2.No" << endl;
 			yes_no(amenities, 0);
@@ -546,18 +546,18 @@ property* search(property** prop_list, reservation** res_list) // search process
 			cout << "Rate: ";
 			cin >> am;
 			amenities[9] = am;
-			ads = filter(amenities, ads);
+			ads = filter(amenities, ads, count);
 		}
-		if (choice == count + 2)
+		if (choice == count + 2) // if sort option selected
 		{
 			cout << "Choose sort option:\n1.Price low to high   2.Price high to low   3.Rank high to low" << endl;
 			cin >> am;
-			ads = sort(ads, am);
+			ads = sort(ads, count, am);
 		}
-	} while (choice > count);
+	} while (choice > count); 
 }
 
-void yes_no(string am[10], int index)
+void yes_no(string am[10], int index) // help to convert 1 tp Yes and 2 to No
 {
 	int choice;
 	cin >> choice;
@@ -566,16 +566,16 @@ void yes_no(string am[10], int index)
 	else am[index] = "No";
 }
 
-property** filter(string* filters, property** properties) 
+property** filter(string* filters, property** properties, int& sizeof_properties)  // return list of relevant ads after applicate filters on the properties list
 {
-	property** ads;
-	bool relevant;
-	int count = 0;
-	for (int i = 0; i < sizeof(properties); i++)
+	property** ads; // returned list
+	bool relevant; 
+	int count = 0; // number of relevant ads
+	for (int i = 0; i < sizeof_properties; i++)
 	{
 		relevant = true;
-		for (int j = 0; j < sizeof(filters); j++)
-			if (!(properties[i]->amenities[j] == filters[j]))
+		for (int j = 0; j < 10; j++)
+			if (!(properties[i]->amenities[j] == filters[j])) // verif each filter according to each property in the list
 				relevant = false;
 		if (relevant)
 		{
@@ -584,16 +584,17 @@ property** filter(string* filters, property** properties)
 			ads[count - 1] = properties[i];
 		}
 	}
+	sizeof_properties = count;
 	return ads;
 }
 
-property** sort(property** ads, int sort_op)
+property** sort(property** ads, int sizeof_ads ,int sort_op) // return list of relevant ads after applicate sorting to the properties list
 {
 	property* temp;
 	if (sort_op == 1) // by price low to high
 	{
-		for (int i = 0; i < sizeof(ads) - 1; i++)
-			for (int j = i + 1; j < sizeof(ads); j++)
+		for (int i = 0; i < sizeof_ads - 1; i++)
+			for (int j = i + 1; j < sizeof_ads; j++)
 				if (ads[i]->price > ads[j]->price)
 				{
 					temp = ads[i];
@@ -603,8 +604,8 @@ property** sort(property** ads, int sort_op)
 	}
 	else if (sort_op == 2) // by price high to low
 	{
-		for (int i = 0; i < sizeof(ads) - 1; i++)
-			for (int j = i + 1; j < sizeof(ads); j++)
+		for (int i = 0; i < sizeof_ads - 1; i++)
+			for (int j = i + 1; j < sizeof_ads; j++)
 				if (ads[i]->price < ads[j]->price)
 				{
 					temp = ads[i];
@@ -614,8 +615,8 @@ property** sort(property** ads, int sort_op)
 	}
 	else if (sort_op == 3) // by rank high to low
 	{
-		for (int i = 0; i < sizeof(ads) - 1; i++)
-			for (int j = i + 1; j < sizeof(ads); j++)
+		for (int i = 0; i < sizeof_ads - 1; i++)
+			for (int j = i + 1; j < sizeof_ads; j++)
 				if (ads[i]->num_of_rates < ads[j]->num_of_rates)
 				{
 					temp = ads[i];
