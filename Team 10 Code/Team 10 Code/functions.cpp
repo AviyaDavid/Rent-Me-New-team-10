@@ -485,10 +485,8 @@ void print_properties(property** properties, int size_of_properties) // print al
 {
 	for (int i = 0; i < size_of_properties; i++)
 	{
-		
 		cout << i + 1;
 		print_property(properties[i]);
-		cout << "___________________________________" << endl;
 	}
 };
 
@@ -503,7 +501,7 @@ void print_property(property* prop) // print all the details about a property
 			cout << myarr[i] << " ";
 	for (int i = 7; i < 10; i++)
 		cout << myarr[i] << prop->amenities[i] << " ";
-	cout << endl;
+	cout << "___________________________________" << endl;
 };
 
 void print_confirmation(property* booked, date from, date to, int nights) // print a confirmation with order main details
@@ -538,11 +536,11 @@ property* search(property** prop_list, reservation** res_list) // search process
 		cin >> checkin.day >> checkin.month >> checkin.year;
 		cout << "Enter check out (dd/mm/yyyy): ";
 		cin >> checkout.day >> checkout.month >> checkout.year;
-		if (checkin < current_date)
+		if (compDates(current_date, checkin) == 1)
 			cout << "Error: this date is due. Please enter new dates." << endl;
-		if (checkout <= checkin)
+		if (compDates(checkin, checkout) != 2)
 			cout << "Error: checkout must be after checkin. Please enter new dates." << endl;
-	} while (checkout <= checkin || checkin < current_date);
+	} while (compDates(current_date, checkin) == 1 || compDates(checkin, checkout) != 2);
 	cout << "Enter number of travelers: ";
 	cin >> travelers;
 	for (int i = 0; i < sizeof(prop_list); i++)
@@ -550,7 +548,7 @@ property* search(property** prop_list, reservation** res_list) // search process
 		if (prop_list[i]->location == loc && prop_list[i]->capacity >= travelers) // search by location and capacity
 			for (int j = 0; j < sizeof(res_list); j++) 
 				if (prop_list[i]->p_name == res_list[j]->p_name) // verifing availability
-					if (!(checkin >= res_list[j]->check_out || checkout <= res_list[j]->check_in))
+					if (compDates(res_list[j]->check_out, checkin) == 1 && compDates(checkout, res_list[j]->check_in) == 1)
 						available = false;
 		if (available)
 		{
@@ -560,7 +558,7 @@ property* search(property** prop_list, reservation** res_list) // search process
 		}
 	}
 	do {
-		print_properties(ads); 
+		print_properties(ads, count); 
 		cout << endl << count + 1 << ". Filters" << count + 2 << ". Sort" << endl;
 		cout << "Choose an ad or option: ";
 		cin >> choice;
@@ -860,14 +858,16 @@ property** add_property(landlord *host, property** properties, int* size_of_prop
 	return properties;
 }
 
-property** editMenu(landlord* host, property** properties, int* size_of_properties)
+property** editMenu(landlord* host, property** properties, int& size_of_properties)
 {
 	int x, y;
 	int flag = 0;
 	int check = 0;
 	string name;
 	cout << "Properties list:" << endl;
-	print_properties(host->prop, *size_of_properties);//לשנות גם אצל יעקב 
+	for (int i = 0; i < size_of_properties; i++)
+		if (host->info.id == properties[i]->owner_id)
+			print_property(properties[i]);
 	cout << "For Edit property press 1" << endl;
 	cout << "For Delete property press 2" << endl;
 	cout << "For Exit press 0" << endl;
@@ -884,7 +884,7 @@ property** editMenu(landlord* host, property** properties, int* size_of_properti
 			break;
 		cout << "Enter the name of the property you want to Edit/Delete" << endl;
 		cin >> name;
-		for (int i = 0; i < *size_of_properties; i++)
+		for (int i = 0; i < size_of_properties; i++)
 		{
 			flag++;
 			if (name == properties[i]->p_name)
@@ -1122,10 +1122,10 @@ property* edit(property* old_prop)
 	return old_prop;
 
 }
-property** deletep(property* p_chosen, property** properties, int* size_of_properties)
+property** deletep(property* p_chosen, property** properties, int& size_of_properties)
 {
 	int check = 0;
-	for (int i = 0; i < *size_of_properties; i++)
+	for (int i = 0; i < size_of_properties; i++)
 	{
 		if ((*properties[i]).p_name == (*p_chosen).p_name)
 		{
@@ -1135,8 +1135,8 @@ property** deletep(property* p_chosen, property** properties, int* size_of_prope
 	if (check == 1)
 	{
 		
-		property** temp = new property * [*size_of_properties-1];
-		for (int i = 0, j =0 ; i < *size_of_properties; ++i, ++j)
+		property** temp = new property * [size_of_properties-1];
+		for (int i = 0, j =0 ; i < size_of_properties; ++i, ++j)
 		{
 			if ((*properties[i]).p_name != (*p_chosen).p_name)
 			{
@@ -1147,7 +1147,7 @@ property** deletep(property* p_chosen, property** properties, int* size_of_prope
 
 		}
 		delete[]properties;
-		*size_of_properties -= 1;
+		size_of_properties -= 1;
 		properties = temp;
 	}
 	return properties;
