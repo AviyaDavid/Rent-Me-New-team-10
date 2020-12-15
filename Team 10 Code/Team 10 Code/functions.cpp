@@ -259,16 +259,22 @@ void write_properties(property** properties, int p_size)
 	rename("newPropertiesDB.csv", "propertiesDB.csv");
 }
 
+<<<<<<< Updated upstream
 traveler* traveler_login(traveler* travelers)
+=======
+
+
+traveler* traveler_login(traveler* travelers, int *size_of_traveler)
+>>>>>>> Stashed changes
 {
-	string id, password;
-	int i, size = sizeof(travelers + 1);
+	//The function receives input from the user and after checking the integrity creates a new array with the user
+	int i, size = *size_of_traveler+1;
 	int index = 0, flag = 0;
 	cout << "Enter I.D. : ";
-	cin >> id;
-	for (i = 0; i < sizeof(travelers); i++)
+	cin >> travelers->id;
+	for (i = 0; i < size; i++)
 	{
-		if (id == travelers[i].id)
+		if (travelers->id == travelers[i].id)//chack id
 			index = i;//true
 	}
 	if (index == 0)
@@ -276,10 +282,10 @@ traveler* traveler_login(traveler* travelers)
 	do
 	{
 		cout << "Enter Password: ";
-		cin >> password;
+		cin >> travelers->password;
 		flag++;
 		cout << "[" << flag << ":3]" << endl;
-	} while (password != travelers[index].password || flag == 3);
+	} while (travelers->password != travelers[index].password || flag == 3);
 	if (flag == 3)
 	{
 		cout << "Incorrect password, user blocked!!" << endl;
@@ -287,8 +293,9 @@ traveler* traveler_login(traveler* travelers)
 	}
 	return &travelers[index];
 }
-traveler* traveler_signup(traveler** travelers, landlord* landlords, int *size_of_travelers)
+traveler* traveler_signup(traveler** travelers, landlord** landlords, int *size_of_travelers)
 {
+	//The function receives input from the user and after checking the integrity creates a new array with the user
 	int i = 0;
 	traveler new_traveler;
 	bool flag = true;
@@ -300,7 +307,7 @@ traveler* traveler_signup(traveler** travelers, landlord* landlords, int *size_o
 		{
 			for (i; i < *size_of_travelers; i++)
 			{
-				if (new_traveler.id == travelers[i]->id)
+				if (new_traveler.id == travelers[i]->id)//chack id
 				{
 					flag = false;
 					break;
@@ -309,7 +316,7 @@ traveler* traveler_signup(traveler** travelers, landlord* landlords, int *size_o
 			}
 			for (i = 0; i < *size_of_travelers && flag; i++)
 			{
-				if (new_traveler.id == travelers[i]->id)
+				if (new_traveler.id == landlords[i]->info.id)
 				{
 					flag = false;
 					break;
@@ -348,29 +355,28 @@ traveler* traveler_signup(traveler** travelers, landlord* landlords, int *size_o
 	cin >> new_traveler.password;
 	cout << "Enter your email please:" << endl;
 	cin >> new_traveler.email;
-	traveler** temp = new traveler * [(*size_of_travelers) + 1];//����� ���� ���� �����
+	traveler** temp = new traveler * [(*size_of_travelers) + 1];//Creating a temporary array
 	for (int i = 0; i < *size_of_travelers; i++)
 	{
 		temp[i] = travelers[i];
 
 	}
 	temp[(*size_of_travelers)+1] = &new_traveler;
-	delete[] landlords;//����� �����
-	travelers = new traveler * [*size_of_travelers];//����� ���� ���� �����
+	delete[] landlords;
+	travelers = new traveler * [*size_of_travelers];//Dynamic size assignment
 	travelers = temp;
 
 	return *travelers;
 }
-landlord* landlord_login(landlord* landlords)
-{
-	string id, password; 
-	int i, size = sizeof(landlords + 1);
+landlord* landlord_login(landlord* landlords, int *size_of_landlords)
+{ 
+	int i, size = *size_of_landlords +1;
 	int index = 0, flag = 0;
 	cout << "Enter I.D. : ";
-	cin >> id;
+	cin >> landlords->info.id;
 	for (i = 0; i < size; i++)
 	{
-		if (id == landlords[i].info.id)
+		if (landlords->info.id == landlords[i].info.id)
 			index = i;//true
 	}
 	if (index == 0)
@@ -378,10 +384,10 @@ landlord* landlord_login(landlord* landlords)
 	do
 	{
 		cout << "Enter Password: ";
-		cin >> password;
+		cin >> landlords->info.password;
 		flag++;
 		cout << "[" << flag << ":3]" << endl;
-	} while (password != landlords[index].info.password || flag == 3);
+	} while (landlords->info.password != landlords[index].info.password || flag == 3);
 	if (flag == 3)
 	{
 		cout << "Incorrect password, user blocked!!" << endl;
@@ -393,7 +399,7 @@ landlord** landlord_signup(landlord** landlords, traveler** travelers , int* siz
 {
 	
 	int i = 0;
-	landlord new_lanlord;
+	landlord new_lanlord;//Create a new array
 	bool flag = true;
 	do
 	{
@@ -403,7 +409,7 @@ landlord** landlord_signup(landlord** landlords, traveler** travelers , int* siz
 		{
 			for (i; i < size_of_travelers; i++)
 			{
-				if (new_lanlord.info.id == travelers[i]->id)
+				if (new_lanlord.info.id == travelers[i]->id)//chack id 
 				{
 					flag = false;
 					break;
@@ -412,7 +418,7 @@ landlord** landlord_signup(landlord** landlords, traveler** travelers , int* siz
 			}
 			for (i = 0; i < *size_of_landlords && flag; i++)
 			{
-				if (new_lanlord.info.id == landlords[i]->info.id)
+				if (new_lanlord.info.id == landlords[i]->info.id)//chack id 
 				{
 					flag = false;
 					break;
@@ -451,7 +457,33 @@ landlord** landlord_signup(landlord** landlords, traveler** travelers , int* siz
 	cin >> new_lanlord.info.password;
 	cout << "Enter your email please:" << endl;
 	cin >> new_lanlord.info.email;
-	landlord** temp = new landlord* [(*size_of_landlords)+1];//����� ���� ���� �����
+	cout << "Number of card:" << endl;
+	cin >> new_lanlord.transfer.card_num;
+	cout << "Due date number:" << endl;
+	cout << "Month: ";
+	cin >> new_lanlord.transfer.due.month;
+	int courrent_month = 12;
+	int courrent_year = 2020;
+	while (new_lanlord.transfer.due.month > 12 || new_lanlord.transfer.due.month < 1 || new_lanlord.transfer.due.month < courrent_month)
+	{
+		cout << "Incorrect month. Please enter again" << endl;
+		cin >> new_lanlord.transfer.due.month;
+	}
+	cout << "Year: ";
+	cin >> new_lanlord.transfer.due.year;
+	while (new_lanlord.transfer.due.year < courrent_year)
+	{
+		cout << "Invalid year. Please enter again" << endl;
+		cin >> new_lanlord.transfer.due.year;
+	}
+	cout << "CVV: " << endl;
+	cin >> new_lanlord.transfer.cvv;
+	while (sizeof(new_lanlord.transfer.cvv) != 4)
+	{
+		cout << "Wrong input, CVV should be only for 3 digits. Please enter again" << endl;
+		cin >> new_lanlord.transfer.cvv;
+	}
+	landlord** temp = new landlord* [(*size_of_landlords)+1];//Creating a temporary array
 	for (int i = 0; i < *size_of_landlords; i++)
 	{
 		temp[i] = landlords[i];
@@ -459,7 +491,7 @@ landlord** landlord_signup(landlord** landlords, traveler** travelers , int* siz
 	}
 	temp[(*size_of_landlords)++] = &new_lanlord;
 	delete[] landlords;//����� �����
-	landlords = new landlord* [*size_of_landlords];//����� ���� ���� �����
+	landlords = new landlord* [*size_of_landlords];//Dynamic size assignment
 	landlords = temp;
 
 	return landlords;
