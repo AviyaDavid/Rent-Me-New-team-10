@@ -44,12 +44,11 @@ void write_reservations(reservation** reservations, int res_len);//write to file
 void write_properties(property** properties, int p_len);//write to file all properties details
 
 //---------------------------------------------------------------------------------------
-
-traveler* traveler_login(traveler* travelers);
-traveler* traveler_signup(traveler** travelers, landlord* landlords, int* size_of_travelers);
-landlord* landlord_login(landlord* landlords);
-landlord** landlord_signup(landlord** landlords, traveler** travelers, int* size_of_landlords, int size_of_travelers);
-
+traveler* traveler_login(traveler** travelers, int sizet);
+traveler* traveler_signup(traveler** travelers, landlord** landlords, int* size_of_travelers, int size_of_landlord);
+landlord* landlord_login(landlord** landlords, int size_of_landlords);
+landlord* landlord_signup(landlord** landlords, traveler** travelers, int* size_of_landlords, int size_of_travelers);
+void LandlordMenu(landlord* user, traveler** travelers, int& size_travel, landlord** landlords, int& size_land, reservation** reservations, int& size_res, property** properties, int& size_pro);
 bool check_id(string id);//checks if id is valid
 
 void print_properties(property** properties, int size_of_properties);
@@ -63,8 +62,7 @@ property** sort(property** ads, int sizeof_ads, int sort_op);
 
 void yes_no(string am[10], int index);
 
-
-reservation** payment(property* chosen, traveler renter, reservation** reservations, int* size_of_reservations, date chek_in, date chek_out);
+reservation** payment(property* chosen, traveler renter, reservation** reservations, int& size_of_reservations, date chek_in, date chek_out, landlord** landlords, int& size_of_landlords);
 
 property** add_property(landlord* host, property** properties, int* size_of_properties);
 
@@ -84,9 +82,7 @@ void mainMenu();
 
 bool loginMenu();
 
-void LandlordMenu(landlord* user, traveler** travelers, int size_travel, landlord** landlords, int size_land, reservation** reservations, int size_res, property** properties, int size_pro);
-
-void travelerdMenu(traveler* user, traveler** travelers, int size_travel, landlord** landlords, int size_land, reservation** reservations, int size_res, property** properties, int size_pro);
+void travelerMenu(traveler* user, traveler** travelers, int& size_travel, landlord** landlords, int& size_land, reservation** reservations, int& size_res, property** properties, int& size_pro);
 
 void freeMemory(traveler** travelers, landlord** landlords, reservation** reservations, property** properties);//frees all allocations
 

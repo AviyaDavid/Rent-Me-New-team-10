@@ -12,11 +12,11 @@ struct date
 struct property
 {
 	string owner_id, description, p_name, location;
-	int price, capacity;
+	int price=0, capacity=0;
 	string near;
 	string amenities[10];//accessability,smoke,pet,balcony,wash,wifi,pool,bed_num room_num,rate
 	bool status;
-	int num_of_rates;
+	int num_of_rates=0;
 };
 
 struct reservation

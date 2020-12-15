@@ -71,10 +71,11 @@ property** read_properties(int& p_size)
 	}
 
 	property** pList = NULL;//initializing property array
+	string line[18];
 	while (!proper.eof())
 	{
 		p_size++;
-		pList = install_new_data(pList, p_size, strtopro(readLine(proper)));
+		pList = install_new_data(pList, p_size, strtopro(readLine(proper,line)));
 	}
 	proper.close();
 	return pList;
@@ -82,21 +83,20 @@ property** read_properties(int& p_size)
 
 
 //--- SUB-FUNCTIONS FOR FILES---//
-string* readLine(ifstream& fp)
+string* readLine(ifstream& fp,string line[18])
 {//returns line from file separated by delimeter into array
-	string line[18];//for words from file (18 is the biggest size needed)
 	int i = 0;//index for string array
 	while (!fp.eof() && fp.peek() != '\n')
 	{
 		getline(fp, line[i], ',');// read details from file
 		i++;
 	}
-	
 	return line;
 }
 traveler* strtotraveler(string* line)
 {//returns traveler containing all data from line
-	traveler* temp;//tempoary traveler
+	traveler a;
+	traveler* temp=&a;//tempoary traveler
 	temp->id=line[0];//identification number
 	temp->f_name=line[1];//first name
 	temp->l_name=line[2];//last name
@@ -107,7 +107,8 @@ traveler* strtotraveler(string* line)
 }
 landlord* strtolandlord(string* line)
 {//returns landlord containing all data from line
-	landlord* temp;//temporary landlord
+	landlord a;
+	landlord* temp=&a;//temporary landlord
 	temp->info = *strtotraveler(line);
 	temp->transfer.card_num=line[6];//credit card number
 	temp->transfer.due = stringtodate(line[7]);//casting to date type and insert to due date
@@ -116,7 +117,8 @@ landlord* strtolandlord(string* line)
 }
 reservation* strtores(string* line)
 {//returns reservation containing all data from line
-	reservation* temp;//tempoary reservation
+	reservation a;
+	reservation* temp=&a;//tempoary reservation
 	temp->p_name = line[0];//property name
 	temp->renter_id = line[1];//renter id
 	temp->check_in = stringtodate(line[2]);//check in date
@@ -128,7 +130,8 @@ reservation* strtores(string* line)
 }
 property* strtopro(string* line)
 {//returns property containing all data from line
-	property* temp;//tempoary property
+	property a;
+	property* temp=&a;//tempoary property
 	temp->owner_id= line[0];
 	temp->description= line[1];
 	temp->p_name= line[2];//property name
@@ -157,25 +160,25 @@ date stringtodate(string str)
 }
 string datetostring(date d)//to format dd/mm/yy
 {
-	string date = '\0';
+	string dt = "";
 	string day = to_string(d.day);
 	string month = to_string(d.month);
 	string year = to_string(d.year);
 	if (day.length() == 1)
-		date = '0' + day;
+		dt = '0' + day;
 	else
-		date = day;
-	date.append("/");
+		dt = day;
+	dt.append("/");
 	if (month.length() == 1)
-		date.append('0' + month);
+		dt.append('0' + month);
 	else
-		date = month;
-	date.append("/");
+		dt = month;
+	dt.append("/");
 	if (year.length() == 2)
-		date.append(year);
+		dt.append(year);
 	else
-		date.append(year.substr(2, 2));
-	return date;
+		dt.append(year.substr(2, 2));
+	return dt;
 }
 
 
@@ -306,11 +309,12 @@ traveler* traveler_signup(traveler** travelers, landlord** landlords, int *size_
 	{
 		cout << "Enter I.D. : ";
 		cin >> new_traveler.id;
-		if (check_id(new_traveler.id))
+		if (check_id(new_traveler.id))//if valid id
 		{
+			flag = true;
 			for (i; i < *size_of_travelers; i++)
 			{
-				if (new_traveler.id == travelers[i]->id)//chack id
+				if (new_traveler.id == travelers[i]->id)//check id
 				{
 					flag = false;
 					break;
@@ -329,9 +333,12 @@ traveler* traveler_signup(traveler** travelers, landlord** landlords, int *size_
 				cout << "The ID is already registerd. " << endl;
 		}
 		else
+		{
+			cout << "The ID is invalid. " << endl;
 			flag = false;
+		}
 
-	} while (flag = false);
+	} while (flag == false);
 
 	bool flag1 = false;
 	flag = true;
@@ -343,7 +350,7 @@ traveler* traveler_signup(traveler** travelers, landlord** landlords, int *size_
 	{
 		cout << "Enter your phone nunber please:" << endl;
 		cin >> new_traveler.p_num;
-		for (int i = 0; i < new_traveler.p_num.length(); ++i)
+		for (unsigned int i = 0; i < new_traveler.p_num.length(); ++i)
 		{
 			if (isdigit(new_traveler.p_num[i]) == false)
 			{
@@ -352,7 +359,7 @@ traveler* traveler_signup(traveler** travelers, landlord** landlords, int *size_
 			}
 		}
 
-	} while (flag = false);
+	} while (flag == false);
 
 	cout << "Enter your password please:" << endl;
 	cin >> new_traveler.password;
@@ -364,9 +371,9 @@ traveler* traveler_signup(traveler** travelers, landlord** landlords, int *size_
 		temp[i] = travelers[i];
 
 	}
-	temp[(*size_of_travelers)+1] = &new_traveler;
-	delete[] landlords;
-	travelers = new traveler * [*size_of_travelers];//Dynamic size assignment
+	temp[(*size_of_travelers)] = &new_traveler;
+	*size_of_travelers++;
+	delete[] travelers;
 	travelers = temp;
 
 	return *travelers;
@@ -407,7 +414,7 @@ landlord* landlord_login(landlord** landlords, int size_of_landlords)
 	return landlords[i];
 }
 
-landlord** landlord_signup(landlord** landlords, traveler** travelers , int* size_of_landlords, int size_of_travelers)
+landlord* landlord_signup(landlord** landlords, traveler** travelers , int* size_of_landlords, int size_of_travelers)
 {
 	
 	int i = 0;
@@ -454,7 +461,7 @@ landlord** landlord_signup(landlord** landlords, traveler** travelers , int* siz
 	{
 		cout << "Enter your phone nunber please:" << endl;
 		cin >> new_lanlord.info.p_num;
-		for (int i = 0; i < new_lanlord.info.p_num.length(); ++i)
+		for (unsigned int i = 0; i < new_lanlord.info.p_num.length(); ++i)
 		{
 			if (isdigit(new_lanlord.info.p_num[i]) == false)
 			{
@@ -463,7 +470,7 @@ landlord** landlord_signup(landlord** landlords, traveler** travelers , int* siz
 			}
 		}
 
-	} while (flag =false);
+	} while (flag ==false);
 	
 	cout << "Enter your password please:" << endl;
 	cin >> new_lanlord.info.password;
@@ -502,11 +509,11 @@ landlord** landlord_signup(landlord** landlords, traveler** travelers , int* siz
 
 	}
 	temp[(*size_of_landlords)++] = &new_lanlord;
-	delete[] landlords;//����� �����
+	delete[] landlords;//delete landlords array.
 	landlords = new landlord* [*size_of_landlords];//Dynamic size assignment
 	landlords = temp;
 
-	return landlords;
+	return landlords[*size_of_landlords-1];
 }
 
 bool check_id(string id)
@@ -514,7 +521,7 @@ bool check_id(string id)
 	//the function returns true if the string is made of numbers only. else - false.
 	if (id.length() != 9)
 		return false;
-	for (int i = 0; i < id.length(); ++i)
+	for (unsigned int i = 0; i < id.length(); ++i)
 	{
 		if (isdigit(id[i]) == false)
 			return false;
@@ -553,7 +560,7 @@ void print_confirmation(property* booked, date from, date to, int nights) // pri
 	cout << "Final price: " << nights * booked->price << endl;
 };
 
-property* search(property** prop_list, reservation** res_list, int sizeof_properties, int sizeof_res, traveler trav, landlord** l_list, int sizeof_l) // search process. RETURN: pointer to the chosen property to rent
+property* search(property** prop_list, reservation** res_list, int sizeof_properties, int &sizeof_res, traveler trav, landlord** l_list, int sizeof_l) // search process. RETURN: pointer to the chosen property to rent
 {
 	string loc; // location
 	date checkin; // date for checkin
@@ -999,7 +1006,7 @@ property** editMenu(landlord* host, property** properties, int& size_of_properti
 	cin >> x;
 	while (x != 0)
 	{
-		while (x != 1 || x != 2)
+		while (x != 1 && x != 2)
 		{
 
 			cout << "Wrong input. Please enter again" << endl;
@@ -1286,14 +1293,14 @@ property** deletep(property* p_chosen, property** properties, int& size_of_prope
 void print_reservations(reservation** reservations, int size_res, property** properties, int size_pro, traveler* user)
 {
 	time_t now = time(0);
-	tm* ltm = localtime(&now);  // get the local time 
+	tm *ltm = localtime(&now);  // get the local time 
 	date today;   // create today's  date
 	today.year = ltm->tm_year + 1900;
 	today.month = ltm->tm_mon + 1;
 	today.day = ltm->tm_mday;
 
 
-	int j;     // index for the traveler's reservations
+	int j=0;     // index for the traveler's reservations
 	for (int i = 0; i < size_res; ++i) // go over the reservations array
 	{
 		if (user->id == reservations[i]->renter_id)   // if the reservation belong to the currently registered traveler
@@ -1306,11 +1313,11 @@ void print_reservations(reservation** reservations, int size_res, property** pro
 			cout << "check out: " << datetostring(reservations[i]->check_out) << endl;
 			cout << "property's location: " << reservations[i]->loc << endl;
 			if (reservations[i]->israted == true)  // check if the reservation was rated
-				cout << "personal rating: " << reservations[i]->rate << "\n";
+				cout << "personal rating: " << reservations[i]->rate << "\n"; 
 			else
 			{
 				cout << "personal rating: not rated yet\n";
-				if (compDates(today, reservations[i]->check_out) == 1)   // check that the check out date 
+				if(compDates(today, reservations[i]->check_out) == 1)   // check that the check out date 
 				{
 					int flag;  //  keep 1 if the traveler want to rate the property
 					cout << "would you like to rate the property?\n1 - Yes\nelse - No " << endl;
@@ -1390,14 +1397,17 @@ void mainMenu()
 	property** properties = NULL;       // reservations property
 	int size_pro = 0;        // the size of the reservations property
 
-	// the  reading from files functions needs to get the sizes by reference' 
-	read_users(travelors, landlords, size_travel, size_land);   // initialize users arrays
+	// reading from files
+	read_users(landlords, size_land, travelers , size_travel);   // initialize users arrays
 	reservations = read_reservation(size_res);   // initialize reservations array
 	properties = read_properties(size_pro);  // initialize properties array
 
 
 	int choice;    // keep the choice from the menu
 	int flag;   // indicate if the user want to
+	landlord* user1 = NULL;
+	traveler* user2 = NULL;
+
 	cout << "Welcome to RentMe" << endl;
 	do {
 		cout << "Main Menu" << endl << "1 - enter as a landlord" << endl << "2 - enter as a traveler" << endl << "3 - exit" << endl;
@@ -1410,28 +1420,32 @@ void mainMenu()
 			if (flag == 1)
 				user1 = landlord_login(landlords, size_land);   // get the user
 			else
-				user1 = landlord_signup(landlords, size_land, travelers, size_travel);  // get the user
-			systen("cls");    // clean screen
-			LandlordMenu(user1, travelers, size_travel, landlords, size_land, reservations, size_res, properties, size_pro);    // activate landlord menu
+				user1 = landlord_signup(landlords, travelers, &size_land, size_travel);  // get the user
+			system("cls");    // clean screen  
+			if (user1 != NULL)
+				LandlordMenu(user1, travelers, size_travel, landlords, size_land, reservations, size_res, properties, size_pro);   // activate landlord menu
+			system("cls");    // clean screen  
 			break;
 
 		case 2:
 			flag = loginMenu();
 			if (flag == 1)
-				user1 = traveler_login(landlords, size_land, travelers, size_travel);   // get the user
+				user2 = traveler_login(travelers, size_travel);   // get the user
 			else
-				user1 = traveler_signup(landlords, size_land, travelers, size_travel);  // get the user
-			systen("cls");    // clean screen
-			LandlordMenu(user1, travelers, size_travel, landlords, size_land, reservations, size_res, properties, size_pro);    // activate traveler menu
+				user2 = traveler_signup(travelers, landlords, &size_travel, size_land);  // get the user
+			system("cls");    // clean screen  
+			if (user2 != NULL)
+				travelerMenu(user2, travelers, size_travel, landlords, size_land, reservations, size_res, properties, size_pro);    // activate traveler menu
+			system("cls");   // clean screen  
 			break;
 
 		case 3:
 			cout << "Goodbye!" << endl;
-			// call read to file fumctions
+			// call read to file functions
 			write_users(landlords, size_land, travelers, size_travel);
 			write_reservations(reservations, size_res);
 			write_properties(properties, size_pro);
-			freeMemory();  // delete allocated memory
+			freeMemory(travelers, landlords, reservations, properties);  // delete allocated memory
 			break;
 		default:
 			cout << "no such option" << endl;
@@ -1451,39 +1465,79 @@ bool loginMenu()
 	return choice;
 }
 
-void LandlordMenu(landlord* user, traveler** travelers, int size_travel, landlord** landlords, int size_land, reservation** reservations, int size_res, property** properties, int size_pro)
+
+void LandlordMenu(landlord* user, traveler** travelers, int& size_travel, landlord** landlords, int& size_land, reservation** reservations, int& size_res, property** properties, int& size_pro)
+// print and manage the landlord menu
 {
 	int choice;
 	do {
+		// print landlord menu
 		cout << "Landlord Menu" << endl;
-		cout << "1 -  "
-
-	}while (choice != 4);
-}
-
-void travelerdMenu(traveler* user, traveler** travelers, int size_travel, landlord** landlords, int size_land, reservation** reservations, int size_res, property** properties, int size_pro)
-{
-	int choice;
-	do {
-		cout << "Traveler Menu" << endl;
-		cout << "1 - search for a   " << endl;
-		cout << "1 - view reservation history  " << endl;
-		cout << "3 - logout  " << endl;
-		switch (choice)
+		cout << "1 - Add new property" << endl;
+		cout << "2 - My properties" << endl;
+		cout << "3 - Make reservation" << endl;
+		cin >> choice;
+		switch (choice)   // activate chosen option from the menu
 		{
 		case 1:
-			search(user, landlords, size_land, reservations, size_res);
+			system("cls");    // clean screen
+			properties = add_property(user, properties, &size_pro);
+			system("cls");    // clean screen
 			break;
 		case 2:
-
+			system("cls");    // clean screen
+			properties = editMenu(user, properties, size_pro);
+			system("cls");    // clean screen
 			break;
 		case 3:
+			system("cls");    // clean screen
+			travelerMenu(&(user->info), travelers, size_travel, landlords, size_land, reservations, size_res, properties, size_pro);
+			system("cls");    // clean screen
+			break;
+		case 4:
+			cout << "Goodbye " << user->info.f_name << " " << user->info.l_name << endl;
+			break;
+		default:
+			cout << "No such option exist" << endl;
+		}
+
+	} while (choice != 4);   // do as long as the user didnt choose logout
+}
+
+void travelerMenu(traveler* user, traveler** travelers, int& size_travel, landlord** landlords, int& size_land, reservation** reservations, int& size_res, property** properties, int& size_pro)
+// print and manage the traveler menu
+{
+	property* flag;   // for search function
+	int choice;
+	do {
+		// print traveler menu
+		cout << "Traveler Menu" << endl;
+		cout << "1 - Make reservation" << endl;
+		cout << "1 - View reservation history  " << endl;
+		cout << "3 - Logout" << endl;
+		switch (choice)   // activate chosen option
+		{
+		case 1:
+			system("cls");    // clean screen
+			do {
+				flag = search(properties, reservations, size_pro, size_res, *user, landlords, size_land);
+			} while (flag == NULL);
+			system("cls");    // clean screen
+			break;
+		case 2:
+			system("cls");    // clean screen
+			print_reservations(reservations, size_res, properties, size_pro, user);
+			system("cls");    // clean screen
+			break;
+		case 3:
+			cout << "Goodbye " << user->f_name << " " << user->l_name << endl;
 			break;
 		default:
 			cout << "no such option exist" << endl;
 		}
-	} while (choice != 3);
+	} while (choice != 3);     // do as long as the user didnt choose logout
 }
+
 
 void freeMemory(traveler** travelers, landlord** landlords, reservation** reservations, property** properties)
 // free all allocted memory

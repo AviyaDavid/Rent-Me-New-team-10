@@ -1,38 +1,15 @@
 ﻿  functions.cpp
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(160,20): error C2440: 'initializing': cannot convert from 'char' to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(160,20): message : No constructor could take the source type, or constructor overload resolution was ambiguous
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(302,7): error C3861: 'check_id': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(339,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(403,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(459,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(519,3): error C3861: 'print_property': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(570,7): error C3861: 'compDates': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(572,7): error C3861: 'compDates': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(574,11): error C3861: 'compDates': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(574,52): error C3861: 'compDates': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(582,10): error C3861: 'compDates': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(582,61): error C3861: 'compDates': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(607,4): error C3861: 'payment': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(613,4): error C3861: 'yes_no': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(615,4): error C3861: 'yes_no': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(617,4): error C3861: 'yes_no': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(619,4): error C3861: 'yes_no': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(621,4): error C3861: 'yes_no': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(623,4): error C3861: 'yes_no': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(625,4): error C3861: 'yes_no': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(635,10): error C3861: 'filter': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(642,11): error C3861: 'sort': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(939,5): error C3861: 'edit': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(944,5): error C3861: 'deletep': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1219,9): error C3861: 'compDates': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1225,7): error C3861: 'rate': identifier not found
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1300,57): error C2664: 'void read_users(landlord **,int &,traveler **,int &)': cannot convert argument 1 from 'traveler **' to 'landlord **'
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1300,13): message : Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(15,6): message : see declaration of 'read_users'
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1301,44): error C2440: '=': cannot convert from 'reservation **' to 'reservation *'
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1301,34): message : Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1302,41): error C2440: '=': cannot convert from 'property **' to 'property *'
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1302,31): message : Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
-C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1317,4): error C3861: 'freeMemory': identifier not found
+C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(996,9): warning C4101: 'y': unreferenced local variable
   main.cpp
   Generating Code...
+C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(95): warning C4172: returning address of local variable or temporary: line
+C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(107): warning C4172: returning address of local variable or temporary: a
+C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(130): warning C4172: returning address of local variable or temporary: a
+C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(117): warning C4172: returning address of local variable or temporary: a
+C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(148): warning C4172: returning address of local variable or temporary: a
+C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(668): warning C4715: 'search': not all control paths return a value
+C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1310): error C4700: uninitialized local variable 'j' used
+C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1213): error C4700: uninitialized local variable 'k' used
+C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1223): error C4700: uninitialized local variable 'z' used
+C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1480): error C4700: uninitialized local variable 'choice' used
+C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1518): error C4700: uninitialized local variable 'choice' used

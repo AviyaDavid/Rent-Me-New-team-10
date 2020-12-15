@@ -6,3 +6,9 @@
 #include"functions.h"
 #include"Structs.h"
 using namespace std;
+
+int main()
+{
+	mainMenu();
+	return 0;
+}
