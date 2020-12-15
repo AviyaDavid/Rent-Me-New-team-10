@@ -39,7 +39,6 @@ void read_users(landlord** landlords_array, int &landi, traveler** travelers_arr
 		}
 	}
 	users.close();//at end of file- after extraction
-	remove("usersDB.csv");//delete users file after extraction and save all data.
 }
 reservation** read_reservation(int &r_size)
 {
@@ -60,7 +59,6 @@ reservation** read_reservation(int &r_size)
 		rList = install_new_data(rList, r_size, strtores(readLine(reservations)));//manual memory reallocation and inserting last property extracted from file
 	}
 	reservations.close();
-	remove("reservationDB.csv");//delete reservations file after extraction and save all data.
 	return rList;
 }
 property** read_properties(int& p_size)
@@ -79,7 +77,6 @@ property** read_properties(int& p_size)
 		pList = install_new_data(pList, p_size, strtopro(readLine(proper)));
 	}
 	proper.close();
-	remove("propertiesDB.csv");//delete properties file after extraction and save all data.
 	return pList;
 }
 
@@ -186,7 +183,7 @@ string datetostring(date d)//to format dd/mm/yy
 void write_users(landlord** landlords, int landi, traveler** travelers, int travi)
 {
 	ofstream p_users;//pointer to write into file
-	p_users.open("usersDB.csv", ios::out || ios::app);//create a file
+	p_users.open("newUsersDB.csv", ios::out || ios::app);//create a file
 	for (int i = 0; i < landi; i++)
 	{
 		p_users << travelertostr(&landlords[i]->info, landi)
@@ -199,6 +196,11 @@ void write_users(landlord** landlords, int landi, traveler** travelers, int trav
 	for (int i = 0; i < travi; i++)
 		p_users << travelertostr(travelers[i], travi)<<'\n';
 	p_users.close();
+	// removing the old file 
+	remove("usersDB.csv");
+
+	// renaming the updated file with the old file name 
+	rename("newUsersDB.csv", "usersDB.csv");
 }
 
 string travelertostr(traveler* t, int size)
@@ -210,7 +212,7 @@ string travelertostr(traveler* t, int size)
 void write_reservations(reservation** reservations, int r_size)
 {
 	ofstream p_reservation;//pointer to write into file
-	p_reservation.open("reservationDB.csv", ios::out || ios::app); //create a file
+	p_reservation.open("newReservationDB.csv", ios::out || ios::app); //create a file
 	for (int i = 0; i < r_size; i++)
 	{
 		p_reservation << reservations[i]->p_name << ','
@@ -223,12 +225,17 @@ void write_reservations(reservation** reservations, int r_size)
 			<< "\n";
 	}
 	p_reservation.close();
+	// removing the old file 
+	remove("reservationDB.csv");
+
+	// renaming the updated file with the old file name 
+	rename("newReservationDB.csv", "reservationDB.csv");
 
 }
 void write_properties(property** properties, int p_size)
 {
 	fstream p_prop;//pointer to write into file
-	p_prop.open("reservationDB.csv", ios::out || ios::app); //create a file
+	p_prop.open("newPropertiesDB.csv", ios::out || ios::app); //create a file
 	for (int i = 0; i < p_size; i++)
 	{
 		p_prop << properties[i]->owner_id << ','
@@ -245,6 +252,11 @@ void write_properties(property** properties, int p_size)
 			<< "\n";
 	}
 	p_prop.close();
+	// removing the old file 
+	remove("propertiesDB.csv");
+
+	// renaming the updated file with the old file name 
+	rename("newPropertiesDB.csv", "propertiesDB.csv");
 }
 
 
