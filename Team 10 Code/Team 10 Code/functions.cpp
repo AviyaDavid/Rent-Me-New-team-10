@@ -264,28 +264,29 @@ traveler* traveler_login(traveler* travelers, int sizet)
 {
 	//The function receives input from the user and after checking the integrity creates a new array with the user
 	int flag = 0,i;
-	cout << "Enter I.D. : ";
-	cin >> travelers->id;
-	for (i = 0; i < sizet; i++)
-	{//do while until find match
-		if (travelers->id == travelers[i].id)//check id
-			break;//true
+	do
+	{
+		cout << "Enter I.D. : ";
+		cin >> travelers->id;
+		i++;
+	} while (travelers->id == travelers[i].id);//check id
+	{
+		if (i == sizet)
+			return NULL;
 	}
-	if (i == sizet)
-		return NULL;
 	do
 	{
 		cout << "Enter Password: ";
 		cin >> travelers->password;
 		flag++;
 		cout << "[" << flag << ":3]" << endl;
-	} while (travelers->password != travelers[index].password || flag == 3);
+	} while (travelers->password != travelers[i].password || flag == 3);
 	if (flag == 3)
 	{
 		cout << "Incorrect password, user blocked!!" << endl;
 		return NULL;
 	}
-	return &travelers[index];
+	return &travelers[i];
 }
 traveler* traveler_signup(traveler** travelers, landlord** landlords, int *size_of_travelers, int size_of_landlord)
 {
