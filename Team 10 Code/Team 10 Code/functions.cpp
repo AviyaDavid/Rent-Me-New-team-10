@@ -276,54 +276,78 @@ traveler* traveler_login(traveler* travelers)
 	}
 	return &travelers[index];
 }
-traveler* traveler_signup(traveler** travelers, landlord* landlords)
+traveler* traveler_signup(traveler** travelers, landlord* landlords, int *size_of_travelers)
 {
-	string id, f_name, l_name, p_num, email, password;
-	int i = 0, size = sizeof(travelers);
-	bool flag1 = 0;//false	
-	cout << "Enter your first name please:" << endl;
-	cin >> f_name;
-	cout << "Enter your last name please:" << endl;
-	cin >> l_name;
-	cout << "Enter your phone nunber please:" << endl;
-	cin >> p_num;
-	cout << "Enter your password please:" << endl;
-	cin >> password;
-	cout << "Enter your email please:" << endl;
-	cin >> email;
+	int i = 0;
+	traveler new_traveler;
+	bool flag = true;
 	do
 	{
 		cout << "Enter I.D. : ";
-		cin >> id;
-	} while (id == (*travelers[i]).id || id == landlords[i].info.id);
-	size++;
-	traveler** temp = new traveler * [size];//����� ���� ���� �����
-	for (int i = 0; i < size - 1; i++)
+		cin >> new_traveler.id;
+		if (check_id(new_traveler.id))
+		{
+			for (i; i < *size_of_travelers; i++)
+			{
+				if (new_traveler.id == travelers[i]->id)
+				{
+					flag = false;
+					break;
+				}
+
+			}
+			for (i = 0; i < *size_of_travelers && flag; i++)
+			{
+				if (new_traveler.id == travelers[i]->id)
+				{
+					flag = false;
+					break;
+				}
+			}
+			if (!flag)
+				cout << "The ID is already registerd. " << endl;
+		}
+		else
+			flag = false;
+
+	} while (flag = false);
+
+	bool flag1 = false;
+	flag = true;
+	cout << "Enter your first name please:" << endl;
+	cin >> new_traveler.f_name;
+	cout << "Enter your last name please:" << endl;
+	cin >> new_traveler.l_name;
+	do
 	{
-		temp[i]->email = travelers[i]->email;//����� ����� ����� �����
-		temp[i]->f_name = travelers[i]->f_name;
-		temp[i]->id = travelers[i]->id;
-		temp[i]->l_name = travelers[i]->l_name;
-		temp[i]->password = travelers[i]->password;
-		temp[i]->p_num = travelers[i]->p_num;
-	}
-	temp[size]->id = id;//����� �� ���� ���� �����
-	temp[size]->f_name = f_name;
-	temp[size]->l_name = l_name;
-	temp[size]->password = password;
-	temp[size]->p_num = p_num;
-	temp[size]->email = email;
-	delete[] * travelers;//����� �����
-	travelers = new traveler * [size];//����� ���� ���� �����
-	for (int i = 0; i < size; i++)
+		cout << "Enter your phone nunber please:" << endl;
+		cin >> new_traveler.p_num;
+		for (int i = 0; i < new_traveler.p_num.length(); ++i)
+		{
+			if (isdigit(new_traveler.p_num[i]) == false)
+			{
+				flag = false;
+				break;
+			}
+		}
+
+	} while (flag = false);
+
+	cout << "Enter your password please:" << endl;
+	cin >> new_traveler.password;
+	cout << "Enter your email please:" << endl;
+	cin >> new_traveler.email;
+	traveler** temp = new traveler * [(*size_of_travelers) + 1];//����� ���� ���� �����
+	for (int i = 0; i < *size_of_travelers; i++)
 	{
-		travelers[i]->email = temp[i]->email;//����� ����� ����� �����
-		travelers[i]->f_name = temp[i]->f_name;
-		travelers[i]->id = temp[i]->id;
-		travelers[i]->l_name = temp[i]->l_name;
-		travelers[i]->password = temp[i]->password;
-		travelers[i]->p_num = temp[i]->p_num;;//����� ����� ����� �����
+		temp[i] = travelers[i];
+
 	}
+	temp[(*size_of_travelers)+1] = &new_traveler;
+	delete[] landlords;//����� �����
+	travelers = new traveler * [*size_of_travelers];//����� ���� ���� �����
+	travelers = temp;
+
 	return *travelers;
 }
 landlord* landlord_login(landlord* landlords)
