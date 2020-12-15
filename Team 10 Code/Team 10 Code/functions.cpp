@@ -18,8 +18,11 @@ void read_users(landlord** landlords_array, int &landi, traveler** travelers_arr
 	//the function reads from file and according to users type it will insert the user to its array.
 
 	ifstream users("usersDB.csv");// file pointer Open an existing file 
-	if (!openfile)//if open failed
-		return;//get out of function
+	if (!users.is_open())//if open failed
+	{
+		cout << "ERROR USERS FILE DOES NOT EXIST" << endl;//error messege
+		exit(1);//get out of system
+	}
 
 	while (!users.eof() && users.peek() == '$')//if not end of file and in landlords user type
 	{//recieve all landlords details from file
@@ -44,8 +47,11 @@ reservation** read_reservation(int &r_size)
 // returns all reservations data from data base on reservations array
 	
 	ifstream reservations("reservationDB.csv");// file pointer Open an existing file 
-	if (!openfile)//if open failed
-		return NULL;//get out of function
+	if (!reservations.is_open())//if open failed
+	{
+		cout << "ERROR USERS FILE DOES NOT EXIST" << endl;//error messege
+		exit(1);//get out of system
+	}
 
 	reservation** rList = NULL;
 	while (!reservations.eof())
@@ -60,8 +66,11 @@ reservation** read_reservation(int &r_size)
 property** read_properties(int& p_size)
 {
 	ifstream proper("propertiesDB.csv");// file pointer Open an existing file 
-	if (!openfile)//if open failed
-		return NULL;//get out of function
+	if (!proper.is_open())//if open failed
+	{
+		cout << "ERROR USERS FILE DOES NOT EXIST" << endl;//error messege
+		exit(1);//get out of system
+	}
 
 	property** pList = NULL;//initializing property array
 	while (!proper.eof())
@@ -76,15 +85,6 @@ property** read_properties(int& p_size)
 
 
 //--- SUB-FUNCTIONS FOR FILES---//
-bool openfile(ifstream fp)
-{//check if file is opend
-	if (!fp.is_open())//if open failed
-	{
-		cout << "ERROR USERS FILE DOES NOT EXIST" << endl;//error messege
-		return false;
-	}
-	return true;
-}
 string* readLine(ifstream& fp)
 {//returns line from file separated by delimeter into array
 	string line[18];//for words from file (18 is the biggest size needed)
@@ -151,16 +151,16 @@ property* strtopro(string* line)
 //---USEFUL AND CASTING FUNCTIONS---//
 //also template on header file for reallocation +1
 date stringtodate(string str)
-{//recieveing string that represents date, returns date
+{//recieveing string that represents date in format-dd/mm/yy, returns date
 	date d;
 	d.day = stoi(str.substr(0, 2));
 	d.month = stoi(str.substr(3, 2));
 	d.year = stoi(str.substr(6, 2));
 	return d;
 }
-string datetostring(date d)
+string datetostring(date d)//to format dd/mm/yy
 {
-	string date = "/0";
+	string date = '\0';
 	string day = to_string(d.day);
 	string month = to_string(d.month);
 	string year = to_string(d.year);
@@ -177,7 +177,7 @@ string datetostring(date d)
 	if (year.length() == 2)
 		date.append(year);
 	else
-		date.append(year.substr(3, 2));
+		date.append(year.substr(2, 2));
 	return date;
 }
 
@@ -195,6 +195,7 @@ void write_users(landlord** landlords, int landi, traveler** travelers, int trav
 			<< landlords[i]->transfer.cvv << ','
 			<< "\n";
 	}
+	////////////////////////////$$
 	for (int i = 0; i < travi; i++)
 		p_users << travelertostr(travelers[i], travi)<<'\n';
 	p_users.close();
