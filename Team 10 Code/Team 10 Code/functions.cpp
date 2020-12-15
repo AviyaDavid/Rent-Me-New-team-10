@@ -535,7 +535,7 @@ void print_confirmation(property* booked, date from, date to, int nights) // pri
 	cout << "Final price: " << nights * booked->price << endl;
 };
 
-property* search(property** prop_list, reservation** res_list, int sizeof_properties, int sizeof_res, traveler trav) // search process. RETURN: pointer to the chosen property to rent
+property* search(property** prop_list, reservation** res_list, int sizeof_properties, int sizeof_res, traveler trav, landlord** l_list, int sizeof_l) // search process. RETURN: pointer to the chosen property to rent
 {
 	string loc; // location
 	date checkin; // date for checkin
@@ -597,7 +597,7 @@ property* search(property** prop_list, reservation** res_list, int sizeof_proper
 		cin >> choice;
 		if (choice <= count) // if a property is chosen
 		{
-			payment(ads[choice], trav, res_list, sizeof_res, checkin, checkout);
+			payment(ads[choice], trav, res_list, sizeof_res, checkin, checkout, l_list, sizeof_l);
 			return ads[choice];
 		}
 		if (choice == count + 1) // if filter option selected 
