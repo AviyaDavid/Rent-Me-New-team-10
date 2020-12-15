@@ -627,7 +627,6 @@ property** sort(property** ads, int sizeof_ads ,int sort_op) // return list of r
 	return ads;
 }
 
-
 reservation** payment(property* chosen, traveler renter, reservation** reservations, int* size_of_reservations, date chek_in, date chek_out)
 {
 	string cvv, card_num, card_owner_id;
