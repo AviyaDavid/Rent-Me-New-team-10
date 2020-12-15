@@ -648,7 +648,7 @@ property** sort(property** ads, int sizeof_ads ,int sort_op) // return list of r
 
 reservation** payment(property* chosen, traveler renter, reservation** reservations, int* size_of_reservations, date chek_in, date chek_out)
 {
-	//לבדןק!!
+	
 	string cvv, card_num, card_owner_id;
 	date due;
 	cout << "Number of card:" << endl;
@@ -696,19 +696,8 @@ reservation** payment(property* chosen, traveler renter, reservation** reservati
 	}
 	temp[*size_of_reservations + 1] = new_reservation;
 	*size_of_reservations += 1;
-	for (int i = 0; i < *size_of_reservations; i++)
-	{
-		delete reservations[i];
-	}
-	reservation* reservations = new reservation[*size_of_reservations];
-	for (int i = 0; i < *size_of_reservations; i++)
-	{
-		reservations[i] = temp[i];
-	}
-	for (int i = 0; i < *size_of_reservations; i++)
-	{
-		delete temp[i];
-	}
+	delete[]reservations;
+	reservations = temp;
 
 	return reservations;
 
