@@ -195,7 +195,7 @@ void write_users(landlord** landlords, int landi, traveler** travelers, int trav
 			<< landlords[i]->transfer.cvv << ','
 			<< "\n";
 	}
-	////////////////////////////$$
+	p_users << "$\n";//inserting delimiter
 	for (int i = 0; i < travi; i++)
 		p_users << travelertostr(travelers[i], travi)<<'\n';
 	p_users.close();
