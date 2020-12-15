@@ -487,7 +487,7 @@ property* search(property** prop_list, reservation** res_list) // search process
 	date checkin; // date for checkin
 	date checkout; // date for checkout
 	int travelers; // number of travelers
-	property** ads; // relevant ads list
+	property** ads = NULL; // relevant ads list
 	bool available = true; // availability
 	int count = 0; // number of relevant ads
 	int choice, am; // menu choice 
@@ -526,10 +526,16 @@ property* search(property** prop_list, reservation** res_list) // search process
 			ads[count - 1] = prop_list[i]; // add the property to the relevant ads list
 		}
 	}
-	do {
-		print_properties(ads, count); 
+	property** firstads = ads;
+	if (count == 0)
+		return NULL;
+	else do {
+		if (ads)
+			print_properties(ads, count);
+		else
+			cout << "No ads found." << endl;
 		cout << endl << count + 1 << ". Filters" << count + 2 << ". Sort" << endl;
-		cout << "Choose an ad or option: ";
+		cout << "Choose an ad or an option: ";
 		cin >> choice;
 		if (choice <= count) // if a property is chosen
 			return ads[choice]; // return it
@@ -558,13 +564,16 @@ property* search(property** prop_list, reservation** res_list) // search process
 			cout << "Rate: ";
 			cin >> am;
 			amenities[9] = am;
-			ads = filter(amenities, ads, count);
+			ads = filter(amenities, firstads, count);
 		}
 		if (choice == count + 2) // if sort option selected
 		{
 			cout << "Choose sort option:\n1.Price low to high   2.Price high to low   3.Rank high to low" << endl;
 			cin >> am;
-			ads = sort(ads, count, am);
+			if (ads)
+				ads = sort(ads, count, am);
+			else
+				cout << "No ads found." << endl;
 		}
 	} while (choice > count); 
 }
@@ -580,7 +589,7 @@ void yes_no(string am[10], int index) // help to convert 1 tp Yes and 2 to No
 
 property** filter(string* filters, property** properties, int& sizeof_properties)  // return list of relevant ads after applicate filters on the properties list
 {
-	property** ads; // returned list
+	property** ads = NULL; // returned list
 	bool relevant; 
 	int count = 0; // number of relevant ads
 	for (int i = 0; i < sizeof_properties; i++)
