@@ -4,8 +4,8 @@
 
 //--- READ FROM FILES---//
 void read_users(landlord** landlords_array, int& landi, traveler** travelers_array, int& travi);//reads from users data base and inserting into arrays the data from file
-reservation** read_reservation();//reads from reservations data base and returns array with data from file
-property** read_properties();//reads from properties data base and returns array with data from file
+reservation** read_reservation(int &r_size);//reads from reservations data base and returns array with data from file
+property** read_properties(int& p_size);//reads from properties data base and returns array with data from file
 
 //--- SUB-FUNCTIONS FOR FILES---//
 bool openfile(ifstream fp);//check if file is opend
