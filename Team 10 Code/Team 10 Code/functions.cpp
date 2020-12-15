@@ -646,11 +646,59 @@ property** sort(property** ads, int sizeof_ads ,int sort_op) // return list of r
 	return ads;
 }
 
-reservation** payment(property* chosen, traveler renter, reservation** reservations, int* size_of_reservations, date chek_in, date chek_out)
+bool isLeap(int Y)
 {
-	
+	if (Y % 400 == 0) return true;
+	else if (Y % 100 == 0) return false;
+	else if (Y % 4 == 0) return true;
+	else return false;
+}
+int DaysCountFrom1900(int year, int month, int day)
+{
+	int ans = 0;
+	for (int i = 1900; i < year; ++i)
+		if (isLeap(i))ans += 366;
+		else ans += 365;
+	for (int i = 1; i < month; ++i) {
+		switch (i) {
+		case 1: ans += 31; break;
+		case 2: ans += isLeap(year) ? 29 : 28; break;
+		case 3: ans += 31; break;
+		case 4: ans += 30; break;
+		case 5: ans += 31; break;
+		case 6: ans += 30; break;
+		case 7: ans += 31; break;
+		case 8: ans += 31; break;
+		case 9: ans += 30; break;
+		case 10: ans += 31; break;
+		case 11: ans += 30; break;
+		case 12: ans += 31; break;
+		}
+	}
+	return ans += day - 1;
+}
+
+int difference_of_days(int day1, int month1, int year1, int day2, int month2, int year2)
+{
+	return abs(DaysCountFrom1900(year1, month1, day1) - DaysCountFrom1900(year2, month2, day2));
+}
+
+reservation** payment(property* chosen, traveler renter, reservation** reservations, int &size_of_reservations, date chek_in, date chek_out, landlord **landlords, int &size_of_landlords)
+{ 
+	//this function print all the reservation information, get the payment informatuon from the renter and then create a new reservation and add it to the reservations arry. after payment the landlord's information wiil be print.
+	int nights;
+	nights = difference_of_days(chek_out.day, chek_out.month, chek_out.year, chek_in.day, chek_in.month, chek_in.year);// calculation number of nights.
+	cout << "Reservation:" << endl;
+	cout << "Property's name:" << chosen->p_name<<endl;
+	cout << "Description:" << chosen->description << endl;
+	cout << "Number of rooms:" << chosen->amenities[8] << endl; 
+	cout << "Capacity:" << chosen->capacity << endl;
+	cout << "Location:" << chosen->location << endl;
+	print_confirmation(chosen, chek_in, chek_out, nights);//print dates, price per night amd total price.
+	// get the payment information from the renter
 	string cvv, card_num, card_owner_id;
 	date due;
+	cout << "Enter credit card information:" << endl;
 	cout << "Number of card:" << endl;
 	cin >> card_num;
 	cout << "Card owner ID:" << endl;
@@ -679,6 +727,9 @@ reservation** payment(property* chosen, traveler renter, reservation** reservati
 		cout << "Wrong input, CVV should be only for 3 digits. Please enter again" << endl;
 		cin >> cvv;
 	}
+	cout << "Payment successfully." << endl;
+	cout << "__________________________________" << endl;
+	// creating a new reservation and editing to the reservations array.
 	reservation temp_res;
 	reservation* new_reservation = &temp_res; // Creating new reservation.
 	(*new_reservation).p_name = (*chosen).p_name;
@@ -689,24 +740,48 @@ reservation** payment(property* chosen, traveler renter, reservation** reservati
 	(*new_reservation).rate = 0;
 	(*new_reservation).israted = false; 
 
-	reservation** temp = new reservation * [*size_of_reservations + 1];
-	for (int i = 0; i < *size_of_reservations; i++)
+	reservation** temp = new reservation * [size_of_reservations + 1];
+	for (int i = 0; i < size_of_reservations; i++)
 	{
 		temp[i] = reservations[i];
 	}
-	temp[*size_of_reservations + 1] = new_reservation;
-	*size_of_reservations += 1;
+	temp[size_of_reservations + 1] = new_reservation;
+	size_of_reservations += 1;
 	delete[]reservations;
 	reservations = temp;
-
-	return reservations;
+	cout << "Payment confirmation:" << endl;
+	int reservetion_number = rand() % 10000000 + 1;
+	cout << "Reservation's number:" << reservetion_number << endl;
+	cout << "Guest name: " << renter.f_name << " " << renter.l_name << endl;
+	cout << "Property's name:" << chosen->p_name << endl;
+	print_confirmation(chosen, chek_in, chek_out, nights);//print dates, price per night amd total price.
+	cout << "Nearby attractions: " << chosen->near << endl;
+	cout << "Landlord information:" << endl;
+	int index = 0;
+	//search for the lanlord information by comparing id.
+	for (int i = 0; i < size_of_landlords; i++)
+	{
+		if (chosen->owner_id == landlords[i]->info.id)
+		{
+			index = i;
+			break;
+		}
+	}
+	//print the landlord information.
+	cout << "Name: " << landlords[index]->info.f_name << " " << landlords[index]->info.l_name << endl;
+	cout << "Number: " << landlords[index]->info.p_num << endl;
+	cout << "E-mail: " << landlords[index]->info.email << endl;
+	cout << "________________________________________________" << endl;
+	return reservations;// returns the update array.
 
 }
 property** add_property(landlord *host, property** properties, int* size_of_properties)
 {
+	//add a new property to the properties array.
 	int x;
 	property new_prop;
 	property* new_property = &new_prop;
+	//get the property's information from the user(landlord).
 	cout << "Description: " << endl;
 	cin >> (*new_property).description;
 	cout << endl;
@@ -811,6 +886,7 @@ property** add_property(landlord *host, property** properties, int* size_of_prop
 	}
 	new_property->amenities[8] = to_string(y);
 	new_property->amenities[9] = '0';
+	//creating a new property and add it to the properties array.
 	property** temp = new property * [*size_of_properties + 1];
 	for (int i = 0; i < *size_of_properties; i++)
 	{
@@ -820,16 +896,17 @@ property** add_property(landlord *host, property** properties, int* size_of_prop
 	delete[] properties;
 	properties = temp;
 
-	return properties;
+	return properties;// returns the update array.
 }
 
 property** editMenu(landlord* host, property** properties, int& size_of_properties)
 {
+	//in this function the user get the option to choose if he want to edit or delete chosen property, and transferd to the relevent function(edit/ deletep).  
 	int x, y;
 	int flag = 0;
 	int check = 0;
 	string name;
-	cout << "Properties list:" << endl;
+	cout << "Properties list:" << endl;// print all the properties the landlord has.
 	for (int i = 0; i < size_of_properties; i++)
 		if (host->info.id == properties[i]->owner_id)
 			print_property(properties[i]);
@@ -865,12 +942,12 @@ property** editMenu(landlord* host, property** properties, int& size_of_properti
 			if (x == 1)
 			{
 				edit((properties[flag]));
-				cout << "Property updated." << endl;
+				cout << "Property updated." << endl;//sending to the function that edit the chosen property.
 			}
 			if (x == 2)
 			{
 				deletep(properties[flag], properties, size_of_properties);
-				cout << "Property deleted." << endl;
+				cout << "Property deleted." << endl;//sending to the function that delete the chosen property from the properties array.
 			}
 		}
 		else
@@ -888,6 +965,7 @@ property** editMenu(landlord* host, property** properties, int& size_of_properti
 }
 property* edit(property* old_prop)
 {
+	//when the landlord wants to edit the property. he get the option to enter other details of his relevent property. 
 	int x;
 	cout << "Edit Property:" << endl;
 	cout << " Press: \n 1-Exit \n 2-Description \n 3- Property name \n 4-Location \n 5- Price per night \n 6-Capasity \n 7-Nearby Attractions \n 8- Availability \n 9-Amenities \n10-Number of rates" << endl;
@@ -949,6 +1027,7 @@ property* edit(property* old_prop)
 			break;
 		case 9:
 			int y;
+			// option to change one of the amenities from the amenities array.
 			cout << "Amenities: \n Press: \n 0-Exit\n1-Accessability \n2-Smoke \n3-Pet \n4-Balcony \n5-Wash \n6-Wi-Fi \n 7-Pool \n 8-Number of beds \n9-Number of rooms \n10-Rate \n";
 			cin >> y;
 			while (y != 0)
@@ -1084,21 +1163,22 @@ property* edit(property* old_prop)
 
 	}
 
-	return old_prop;
+	return old_prop;//returns the update property.
 
 }
 property** deletep(property* p_chosen, property** properties, int& size_of_properties)
 {
+	// this function allows the landlord delete one of his properties from the properties array. rerurns the uapdae array without the chosen property.
 	int check = 0;
 	for (int i = 0; i < size_of_properties; i++)
-	{
+	{//finding the index of the chosen property in the properties array by his name. 
 		if ((*properties[i]).p_name == (*p_chosen).p_name)
 		{
 			check = 1;
 		}
 	}
 	if (check == 1)
-	{
+	{//only if the name of the property was found in the properties array we can delete him from the array.
 		
 		property** temp = new property * [size_of_properties-1];
 		for (int i = 0, j =0 ; i < size_of_properties; ++i, ++j)
@@ -1115,7 +1195,7 @@ property** deletep(property* p_chosen, property** properties, int& size_of_prope
 		size_of_properties -= 1;
 		properties = temp;
 	}
-	return properties;
+	return properties;//returns the upadate array.
 }
 // ********* print the traveler's resrvatios history *********
 void print_reservations(reservation* reservations, int size_res, property* properties, int size_pro, string id)
