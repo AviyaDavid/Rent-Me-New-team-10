@@ -259,25 +259,19 @@ void write_properties(property** properties, int p_size)
 	rename("newPropertiesDB.csv", "propertiesDB.csv");
 }
 
-<<<<<<< Updated upstream
-traveler* traveler_login(traveler* travelers)
-=======
 
-
-traveler* traveler_login(traveler* travelers, int *size_of_traveler)
->>>>>>> Stashed changes
+traveler* traveler_login(traveler* travelers, int sizet)
 {
 	//The function receives input from the user and after checking the integrity creates a new array with the user
-	int i, size = *size_of_traveler+1;
-	int index = 0, flag = 0;
+	int flag = 0,i;
 	cout << "Enter I.D. : ";
 	cin >> travelers->id;
-	for (i = 0; i < size; i++)
-	{
-		if (travelers->id == travelers[i].id)//chack id
-			index = i;//true
+	for (i = 0; i < sizet; i++)
+	{//do while until find match
+		if (travelers->id == travelers[i].id)//check id
+			break;//true
 	}
-	if (index == 0)
+	if (i == sizet)
 		return NULL;
 	do
 	{
@@ -293,7 +287,7 @@ traveler* traveler_login(traveler* travelers, int *size_of_traveler)
 	}
 	return &travelers[index];
 }
-traveler* traveler_signup(traveler** travelers, landlord** landlords, int *size_of_travelers)
+traveler* traveler_signup(traveler** travelers, landlord** landlords, int *size_of_travelers, int size_of_landlord)
 {
 	//The function receives input from the user and after checking the integrity creates a new array with the user
 	int i = 0;
@@ -314,7 +308,7 @@ traveler* traveler_signup(traveler** travelers, landlord** landlords, int *size_
 				}
 
 			}
-			for (i = 0; i < *size_of_travelers && flag; i++)
+			for (i = 0; i < size_of_landlord && flag; i++)
 			{
 				if (new_traveler.id == landlords[i]->info.id)
 				{
