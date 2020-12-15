@@ -18,8 +18,11 @@ void read_users(landlord** landlords_array, int &landi, traveler** travelers_arr
 	//the function reads from file and according to users type it will insert the user to its array.
 
 	ifstream users("usersDB.csv");// file pointer Open an existing file 
-	if (!openfile)//if open failed
-		return;//get out of function
+	if (!users.is_open())//if open failed
+	{
+		cout << "ERROR USERS FILE DOES NOT EXIST" << endl;//error messege
+		exit(1);//get out of system
+	}
 
 	while (!users.eof() && users.peek() == '$')//if not end of file and in landlords user type
 	{//recieve all landlords details from file
@@ -36,7 +39,6 @@ void read_users(landlord** landlords_array, int &landi, traveler** travelers_arr
 		}
 	}
 	users.close();//at end of file- after extraction
-	remove("usersDB.csv");//delete users file after extraction and save all data.
 }
 reservation** read_reservation(int &r_size)
 {
@@ -44,8 +46,11 @@ reservation** read_reservation(int &r_size)
 // returns all reservations data from data base on reservations array
 	
 	ifstream reservations("reservationDB.csv");// file pointer Open an existing file 
-	if (!openfile)//if open failed
-		return NULL;//get out of function
+	if (!reservations.is_open())//if open failed
+	{
+		cout << "ERROR USERS FILE DOES NOT EXIST" << endl;//error messege
+		exit(1);//get out of system
+	}
 
 	reservation** rList = NULL;
 	while (!reservations.eof())
@@ -54,14 +59,16 @@ reservation** read_reservation(int &r_size)
 		rList = install_new_data(rList, r_size, strtores(readLine(reservations)));//manual memory reallocation and inserting last property extracted from file
 	}
 	reservations.close();
-	remove("reservationDB.csv");//delete reservations file after extraction and save all data.
 	return rList;
 }
 property** read_properties(int& p_size)
 {
 	ifstream proper("propertiesDB.csv");// file pointer Open an existing file 
-	if (!openfile)//if open failed
-		return NULL;//get out of function
+	if (!proper.is_open())//if open failed
+	{
+		cout << "ERROR USERS FILE DOES NOT EXIST" << endl;//error messege
+		exit(1);//get out of system
+	}
 
 	property** pList = NULL;//initializing property array
 	while (!proper.eof())
@@ -70,21 +77,11 @@ property** read_properties(int& p_size)
 		pList = install_new_data(pList, p_size, strtopro(readLine(proper)));
 	}
 	proper.close();
-	remove("propertiesDB.csv");//delete properties file after extraction and save all data.
 	return pList;
 }
 
 
 //--- SUB-FUNCTIONS FOR FILES---//
-bool openfile(ifstream fp)
-{//check if file is opend
-	if (!fp.is_open())//if open failed
-	{
-		cout << "ERROR USERS FILE DOES NOT EXIST" << endl;//error messege
-		return false;
-	}
-	return true;
-}
 string* readLine(ifstream& fp)
 {//returns line from file separated by delimeter into array
 	string line[18];//for words from file (18 is the biggest size needed)
@@ -151,16 +148,16 @@ property* strtopro(string* line)
 //---USEFUL AND CASTING FUNCTIONS---//
 //also template on header file for reallocation +1
 date stringtodate(string str)
-{//recieveing string that represents date, returns date
+{//recieveing string that represents date in format-dd/mm/yy, returns date
 	date d;
 	d.day = stoi(str.substr(0, 2));
 	d.month = stoi(str.substr(3, 2));
 	d.year = stoi(str.substr(6, 2));
 	return d;
 }
-string datetostring(date d)
+string datetostring(date d)//to format dd/mm/yy
 {
-	string date = "/0";
+	string date = '\0';
 	string day = to_string(d.day);
 	string month = to_string(d.month);
 	string year = to_string(d.year);
@@ -177,7 +174,7 @@ string datetostring(date d)
 	if (year.length() == 2)
 		date.append(year);
 	else
-		date.append(year.substr(3, 2));
+		date.append(year.substr(2, 2));
 	return date;
 }
 
@@ -186,7 +183,7 @@ string datetostring(date d)
 void write_users(landlord** landlords, int landi, traveler** travelers, int travi)
 {
 	ofstream p_users;//pointer to write into file
-	p_users.open("usersDB.csv", ios::out || ios::app);//create a file
+	p_users.open("newUsersDB.csv", ios::out || ios::app);//create a file
 	for (int i = 0; i < landi; i++)
 	{
 		p_users << travelertostr(&landlords[i]->info, landi)
@@ -195,9 +192,15 @@ void write_users(landlord** landlords, int landi, traveler** travelers, int trav
 			<< landlords[i]->transfer.cvv << ','
 			<< "\n";
 	}
+	p_users << "$\n";//inserting delimiter
 	for (int i = 0; i < travi; i++)
 		p_users << travelertostr(travelers[i], travi)<<'\n';
 	p_users.close();
+	// removing the old file 
+	remove("usersDB.csv");
+
+	// renaming the updated file with the old file name 
+	rename("newUsersDB.csv", "usersDB.csv");
 }
 
 string travelertostr(traveler* t, int size)
@@ -209,7 +212,7 @@ string travelertostr(traveler* t, int size)
 void write_reservations(reservation** reservations, int r_size)
 {
 	ofstream p_reservation;//pointer to write into file
-	p_reservation.open("reservationDB.csv", ios::out || ios::app); //create a file
+	p_reservation.open("newReservationDB.csv", ios::out || ios::app); //create a file
 	for (int i = 0; i < r_size; i++)
 	{
 		p_reservation << reservations[i]->p_name << ','
@@ -222,12 +225,17 @@ void write_reservations(reservation** reservations, int r_size)
 			<< "\n";
 	}
 	p_reservation.close();
+	// removing the old file 
+	remove("reservationDB.csv");
+
+	// renaming the updated file with the old file name 
+	rename("newReservationDB.csv", "reservationDB.csv");
 
 }
 void write_properties(property** properties, int p_size)
 {
 	fstream p_prop;//pointer to write into file
-	p_prop.open("reservationDB.csv", ios::out || ios::app); //create a file
+	p_prop.open("newPropertiesDB.csv", ios::out || ios::app); //create a file
 	for (int i = 0; i < p_size; i++)
 	{
 		p_prop << properties[i]->owner_id << ','
@@ -244,139 +252,166 @@ void write_properties(property** properties, int p_size)
 			<< "\n";
 	}
 	p_prop.close();
+	// removing the old file 
+	remove("propertiesDB.csv");
+
+	// renaming the updated file with the old file name 
+	rename("newPropertiesDB.csv", "propertiesDB.csv");
 }
 
 
-
-traveler* traveler_login(traveler* travelers)
+traveler* traveler_login(traveler** travelers, int sizet)
 {
+	//The function receives input from the user and after checking the integrity creates a new array with the user
+	int flag = 0, i;
 	string id, password;
-	int i, size = sizeof(travelers + 1);
-	int index = 0, flag = 0;
-	cout << "Enter I.D. : ";
-	cin >> id;
-	for (i = 0; i < sizeof(travelers); i++)
-	{
-		if (id == travelers[i].id)
-			index = i;//true
-	}
-	if (index == 0)
-		return NULL;
-	do
-	{
-		cout << "Enter Password: ";
-		cin >> password;
-		flag++;
-		cout << "[" << flag << ":3]" << endl;
-	} while (password != travelers[index].password || flag == 3);
-	if (flag == 3)
-	{
-		cout << "Incorrect password, user blocked!!" << endl;
-		return NULL;
-	}
-	return &travelers[index];
-}
-traveler* traveler_signup(traveler** travelers, landlord* landlords)
-{
-	string id, f_name, l_name, p_num, email, password;
-	int i = 0, size = sizeof(travelers);
-	bool flag1 = 0;//false	
-	cout << "Enter your first name please:" << endl;
-	cin >> f_name;
-	cout << "Enter your last name please:" << endl;
-	cin >> l_name;
-	cout << "Enter your phone nunber please:" << endl;
-	cin >> p_num;
-	cout << "Enter your password please:" << endl;
-	cin >> password;
-	cout << "Enter your email please:" << endl;
-	cin >> email;
 	do
 	{
 		cout << "Enter I.D. : ";
 		cin >> id;
-	} while (id == (*travelers[i]).id || id == landlords[i].info.id);
-	size++;
-	traveler** temp = new traveler * [size];//����� ���� ���� �����
-	for (int i = 0; i < size - 1; i++)
-	{
-		temp[i]->email = travelers[i]->email;//����� ����� ����� �����
-		temp[i]->f_name = travelers[i]->f_name;
-		temp[i]->id = travelers[i]->id;
-		temp[i]->l_name = travelers[i]->l_name;
-		temp[i]->password = travelers[i]->password;
-		temp[i]->p_num = travelers[i]->p_num;
-	}
-	temp[size]->id = id;//����� �� ���� ���� �����
-	temp[size]->f_name = f_name;
-	temp[size]->l_name = l_name;
-	temp[size]->password = password;
-	temp[size]->p_num = p_num;
-	temp[size]->email = email;
-	delete[] * travelers;//����� �����
-	travelers = new traveler * [size];//����� ���� ���� �����
-	for (int i = 0; i < size; i++)
-	{
-		travelers[i]->email = temp[i]->email;//����� ����� ����� �����
-		travelers[i]->f_name = temp[i]->f_name;
-		travelers[i]->id = temp[i]->id;
-		travelers[i]->l_name = temp[i]->l_name;
-		travelers[i]->password = temp[i]->password;
-		travelers[i]->p_num = temp[i]->p_num;;//����� ����� ����� �����
-	}
-	return *travelers;
-}
-landlord* landlord_login(landlord* landlords)
-{
-	string id, password; 
-	int i, size = sizeof(landlords + 1);
-	int index = 0, flag = 0;
-	cout << "Enter I.D. : ";
-	cin >> id;
-	for (i = 0; i < size; i++)
-	{
-		if (id == landlords[i].info.id)
-			index = i;//true
-	}
-	if (index == 0)
-		return NULL;
+		for (i = 0; i < sizet; i++)
+		{
+			if (id == travelers[i]->id)
+			{
+				flag = 1;
+				break;
+			}
+		}
+		if (flag != 1)
+			cout << "User not found." << endl;
+	} while (flag != 1);//check id
+	flag = 0;
 	do
 	{
 		cout << "Enter Password: ";
 		cin >> password;
 		flag++;
 		cout << "[" << flag << ":3]" << endl;
-	} while (password != landlords[index].info.password || flag == 3);
+
+	} while (password != travelers[i]->password && flag != 3);
 	if (flag == 3)
 	{
 		cout << "Incorrect password, user blocked!!" << endl;
 		return NULL;
 	}
-	return &landlords[index];
+	return travelers[i];
 }
-
-
-
-
-bool check_id(string id)
+traveler* traveler_signup(traveler** travelers, landlord** landlords, int *size_of_travelers, int size_of_landlord)
 {
-	//the function returns true if the string is made of numbers only. else - false.
-	if (id.length() != 9)
-		return false;
-	for (int i = 0; i < id.length(); ++i)
+	//The function receives input from the user and after checking the integrity creates a new array with the user
+	int i = 0;
+	traveler new_traveler;
+	bool flag = true;
+	do
 	{
-		if (isdigit(id[i]) == false)
-			return false;
-	}
-	return true;
-}
+		cout << "Enter I.D. : ";
+		cin >> new_traveler.id;
+		if (check_id(new_traveler.id))
+		{
+			for (i; i < *size_of_travelers; i++)
+			{
+				if (new_traveler.id == travelers[i]->id)//chack id
+				{
+					flag = false;
+					break;
+				}
 
+			}
+			for (i = 0; i < size_of_landlord && flag; i++)
+			{
+				if (new_traveler.id == landlords[i]->info.id)
+				{
+					flag = false;
+					break;
+				}
+			}
+			if (!flag)
+				cout << "The ID is already registerd. " << endl;
+		}
+		else
+			flag = false;
+
+	} while (flag = false);
+
+	bool flag1 = false;
+	flag = true;
+	cout << "Enter your first name please:" << endl;
+	cin >> new_traveler.f_name;
+	cout << "Enter your last name please:" << endl;
+	cin >> new_traveler.l_name;
+	do
+	{
+		cout << "Enter your phone nunber please:" << endl;
+		cin >> new_traveler.p_num;
+		for (int i = 0; i < new_traveler.p_num.length(); ++i)
+		{
+			if (isdigit(new_traveler.p_num[i]) == false)
+			{
+				flag = false;
+				break;
+			}
+		}
+
+	} while (flag = false);
+
+	cout << "Enter your password please:" << endl;
+	cin >> new_traveler.password;
+	cout << "Enter your email please:" << endl;
+	cin >> new_traveler.email;
+	traveler** temp = new traveler * [(*size_of_travelers) + 1];//Creating a temporary array
+	for (int i = 0; i < *size_of_travelers; i++)
+	{
+		temp[i] = travelers[i];
+
+	}
+	temp[(*size_of_travelers)+1] = &new_traveler;
+	delete[] landlords;
+	travelers = new traveler * [*size_of_travelers];//Dynamic size assignment
+	travelers = temp;
+
+	return *travelers;
+}
+landlord* landlord_login(landlord** landlords, int size_of_landlords)
+{ 
+	int flag = 0, i;
+	string id, password;
+	do
+	{
+		cout << "Enter I.D. : ";
+		cin >> id;
+		for (i = 0; i < size_of_landlords; i++)
+		{
+			if (id == landlords[i]->info.id)
+			{
+				flag = 1;
+				break;
+			}
+		}
+		if (flag != 1)
+			cout << "User not found." << endl;
+	} while (flag != 1);//check id
+	flag = 0;
+	do
+	{
+		cout << "Enter Password: ";
+		cin >> password;
+		flag++;
+		cout << "[" << flag << ":3]" << endl;
+
+	} while (password != landlords[i]->info.password && flag != 3);
+	if (flag == 3)
+	{
+		cout << "Incorrect password, user blocked!!" << endl;
+		return NULL;
+	}
+	return landlords[i];
+}
 
 landlord** landlord_signup(landlord** landlords, traveler** travelers , int* size_of_landlords, int size_of_travelers)
 {
 	
 	int i = 0;
-	landlord new_lanlord;
+	landlord new_lanlord;//Create a new array
 	bool flag = true;
 	do
 	{
@@ -386,7 +421,7 @@ landlord** landlord_signup(landlord** landlords, traveler** travelers , int* siz
 		{
 			for (i; i < size_of_travelers; i++)
 			{
-				if (new_lanlord.info.id == travelers[i]->id)
+				if (new_lanlord.info.id == travelers[i]->id)//chack id 
 				{
 					flag = false;
 					break;
@@ -395,7 +430,7 @@ landlord** landlord_signup(landlord** landlords, traveler** travelers , int* siz
 			}
 			for (i = 0; i < *size_of_landlords && flag; i++)
 			{
-				if (new_lanlord.info.id == landlords[i]->info.id)
+				if (new_lanlord.info.id == landlords[i]->info.id)//chack id 
 				{
 					flag = false;
 					break;
@@ -434,7 +469,33 @@ landlord** landlord_signup(landlord** landlords, traveler** travelers , int* siz
 	cin >> new_lanlord.info.password;
 	cout << "Enter your email please:" << endl;
 	cin >> new_lanlord.info.email;
-	landlord** temp = new landlord* [(*size_of_landlords)+1];//����� ���� ���� �����
+	cout << "Number of card:" << endl;
+	cin >> new_lanlord.transfer.card_num;
+	cout << "Due date number:" << endl;
+	cout << "Month: ";
+	cin >> new_lanlord.transfer.due.month;
+	int courrent_month = 12;
+	int courrent_year = 2020;
+	while (new_lanlord.transfer.due.month > 12 || new_lanlord.transfer.due.month < 1 || new_lanlord.transfer.due.month < courrent_month)
+	{
+		cout << "Incorrect month. Please enter again" << endl;
+		cin >> new_lanlord.transfer.due.month;
+	}
+	cout << "Year: ";
+	cin >> new_lanlord.transfer.due.year;
+	while (new_lanlord.transfer.due.year < courrent_year)
+	{
+		cout << "Invalid year. Please enter again" << endl;
+		cin >> new_lanlord.transfer.due.year;
+	}
+	cout << "CVV: " << endl;
+	cin >> new_lanlord.transfer.cvv;
+	while (sizeof(new_lanlord.transfer.cvv) != 4)
+	{
+		cout << "Wrong input, CVV should be only for 3 digits. Please enter again" << endl;
+		cin >> new_lanlord.transfer.cvv;
+	}
+	landlord** temp = new landlord* [(*size_of_landlords)+1];//Creating a temporary array
 	for (int i = 0; i < *size_of_landlords; i++)
 	{
 		temp[i] = landlords[i];
@@ -442,10 +503,23 @@ landlord** landlord_signup(landlord** landlords, traveler** travelers , int* siz
 	}
 	temp[(*size_of_landlords)++] = &new_lanlord;
 	delete[] landlords;//����� �����
-	landlords = new landlord* [*size_of_landlords];//����� ���� ���� �����
+	landlords = new landlord* [*size_of_landlords];//Dynamic size assignment
 	landlords = temp;
 
 	return landlords;
+}
+
+bool check_id(string id)
+{
+	//the function returns true if the string is made of numbers only. else - false.
+	if (id.length() != 9)
+		return false;
+	for (int i = 0; i < id.length(); ++i)
+	{
+		if (isdigit(id[i]) == false)
+			return false;
+	}
+	return true;
 }
 
 void print_properties(property** properties, int size_of_properties) // print all the properties in the properties list
@@ -479,7 +553,7 @@ void print_confirmation(property* booked, date from, date to, int nights) // pri
 	cout << "Final price: " << nights * booked->price << endl;
 };
 
-property* search(property** prop_list, reservation** res_list) // search process. RETURN: pointer to the chosen property to rent
+property* search(property** prop_list, reservation** res_list, int sizeof_properties, int sizeof_res, traveler trav, landlord** l_list, int sizeof_l) // search process. RETURN: pointer to the chosen property to rent
 {
 	string loc; // location
 	date checkin; // date for checkin
@@ -490,12 +564,13 @@ property* search(property** prop_list, reservation** res_list) // search process
 	int count = 0; // number of relevant ads
 	int choice, am; // menu choice 
 	string amenities[10]; // array of selected amenities for search process
-	time_t current = time(0); 
+	time_t current = time(0);
 	tm* ltm = localtime(&current);
 	date current_date; // current date 
-	current_date.day = ltm->tm_mday; 
+	current_date.day = ltm->tm_mday;
 	current_date.month = ltm->tm_mon;
 	current_date.year = ltm->tm_year;
+
 	cout << "Enter location: ";
 	cin >> loc;
 	do {
@@ -510,10 +585,10 @@ property* search(property** prop_list, reservation** res_list) // search process
 	} while (compDates(current_date, checkin) == 1 || compDates(checkin, checkout) != 2);
 	cout << "Enter number of travelers: ";
 	cin >> travelers;
-	for (int i = 0; i < sizeof(prop_list); i++)
+	for (int i = 0; i < sizeof_properties; i++)
 	{
 		if (prop_list[i]->location == loc && prop_list[i]->capacity >= travelers) // search by location and capacity
-			for (int j = 0; j < sizeof(res_list); j++) 
+			for (int j = 0; j < sizeof_res; j++)
 				if (prop_list[i]->p_name == res_list[j]->p_name) // verifing availability
 					if (compDates(res_list[j]->check_out, checkin) == 1 && compDates(checkout, res_list[j]->check_in) == 1)
 						available = false;
@@ -526,17 +601,23 @@ property* search(property** prop_list, reservation** res_list) // search process
 	}
 	property** firstads = ads;
 	if (count == 0)
+	{
+		cout << "No ads found." << endl;
 		return NULL;
+	}
 	else do {
 		if (ads)
 			print_properties(ads, count);
 		else
 			cout << "No ads found." << endl;
-		cout << endl << count + 1 << ". Filters" << count + 2 << ". Sort" << endl;
+		cout << endl << count + 1 << ".Filters" << count + 2 << ".Sort" << count + 3 << ".Return to main search" << endl;
 		cout << "Choose an ad or an option: ";
 		cin >> choice;
 		if (choice <= count) // if a property is chosen
-			return ads[choice]; // return it
+		{
+			payment(ads[choice], trav, res_list, sizeof_res, checkin, checkout, l_list, sizeof_l);
+			return ads[choice];
+		}
 		if (choice == count + 1) // if filter option selected 
 		{
 			cout << "Accessibility ? 1.Yes 2.No" << endl;
@@ -571,9 +652,11 @@ property* search(property** prop_list, reservation** res_list) // search process
 			if (ads)
 				ads = sort(ads, count, am);
 			else
-				cout << "No ads found." << endl;
+				cout << "No ads to sort." << endl;
 		}
-	} while (choice > count); 
+		if (choice == count + 3)
+			return NULL;
+	} while (choice > count);
 }
 
 void yes_no(string am[10], int index) // help to convert 1 tp Yes and 2 to No
@@ -963,6 +1046,7 @@ property** editMenu(landlord* host, property** properties, int& size_of_properti
 	return properties;
 
 }
+
 property* edit(property* old_prop)
 {
 	//when the landlord wants to edit the property. he get the option to enter other details of his relevent property. 
@@ -1197,8 +1281,9 @@ property** deletep(property* p_chosen, property** properties, int& size_of_prope
 	}
 	return properties;//returns the upadate array.
 }
+
 // ********* print the traveler's resrvatios history *********
-void print_reservations(reservation* reservations, int size_res, property* properties, int size_pro, string id)
+void print_reservations(reservation** reservations, int size_res, property** properties, int size_pro, traveler* user)
 {
 	time_t now = time(0);
 	tm* ltm = localtime(&now);  // get the local time 
@@ -1207,34 +1292,36 @@ void print_reservations(reservation* reservations, int size_res, property* prope
 	today.month = ltm->tm_mon + 1;
 	today.day = ltm->tm_mday;
 
+
 	int j;     // index for the traveler's reservations
 	for (int i = 0; i < size_res; ++i) // go over the reservations array
 	{
-		if (id == reservations[i].renter_id)   // if the reservation belong to the currently registered traveler
+		if (user->id == reservations[i]->renter_id)   // if the reservation belong to the currently registered traveler
 		{
 			// printing the reservation details
 			++j;
 			cout << "reservation number: " << j << "\n";
-			cout << "property's name: " << reservations[i].p_name << endl;
-			cout << "check in: " << reservations[i].check_in.day << "/" << reservations[i].check_in.month << "/" << reservations[i].check_in.year << endl;
-			cout << "check out: " << reservations[i].check_out.day << "/" << reservations[i].check_out.month << "/" << reservations[i].check_out.year << "\n";
-			cout << "property's location: " << reservations[i].loc << "\n";
-			if (reservations[i].israted == true)  // check if the reservation was rated
-				cout << "personal rating: " << reservations[i].rate << "\n";
+			cout << "property's name: " << reservations[i]->p_name << endl;
+			cout << "check in: " << datetostring(reservations[i]->check_in) << endl;
+			cout << "check out: " << datetostring(reservations[i]->check_out) << endl;
+			cout << "property's location: " << reservations[i]->loc << endl;
+			if (reservations[i]->israted == true)  // check if the reservation was rated
+				cout << "personal rating: " << reservations[i]->rate << "\n";
 			else
 			{
 				cout << "personal rating: not rated yet\n";
-				if (compDates(today, reservations[i].check_out) == 1)   // check that the check out date 
+				if (compDates(today, reservations[i]->check_out) == 1)   // check that the check out date 
 				{
 					int flag;  //  keep 1 if the traveler want to rate the property
 					cout << "would you like to rate the property?\n1 - Yes\nelse - No " << endl;
 					cin >> flag;
 					if (flag == 1)
-						rate((reservations + i), properties, size_pro);   // sent to get rate
+						rate(reservations[i], properties, size_pro);   // sent to get rate
 				}
 			}
 
-			cout << BREAK << endl;   // print the line breaker between each reservation
+			if (i < size_res - 1)  // print the line breaker between each reservation
+				cout << BREAK << endl;
 		}
 	}
 }
@@ -1261,7 +1348,7 @@ void rate(reservation* res, property** properties, int size_pro)
 }
 
 
-/* compare between dates */
+//* compare between dates */
 int compDates(date a, date b)
 /* the function compare two dates, return 0 if the dates are equal, 1 if the first is bigger than the second or else it return 2 */
 {
@@ -1288,7 +1375,6 @@ int compDates(date a, date b)
 		return 0;
 }
 
-
 // ****** Main Menu ****** 
 void mainMenu()
 {
@@ -1305,23 +1391,46 @@ void mainMenu()
 	int size_pro = 0;        // the size of the reservations property
 
 	// the  reading from files functions needs to get the sizes by reference' 
-	read_users(travelers, landlords, size_travel, size_land);   // initialize users arrays
-	*reservations = read_reservation(size_res);   // initialize reservations array
-	*properties = read_properties(size_pro);  // initialize properties array
+	read_users(travelors, landlords, size_travel, size_land);   // initialize users arrays
+	reservations = read_reservation(size_res);   // initialize reservations array
+	properties = read_properties(size_pro);  // initialize properties array
 
-	int choice;
+
+	int choice;    // keep the choice from the menu
+	int flag;   // indicate if the user want to
 	cout << "Welcome to RentMe" << endl;
 	do {
 		cout << "Main Menu" << endl << "1 - enter as a landlord" << endl << "2 - enter as a traveler" << endl << "3 - exit" << endl;
 		cin >> choice;
+		landlord* user1;
 		switch (choice)
 		{
 		case 1:
-			break;   // activate landlord menu
+			flag = loginMenu();
+			if (flag == 1)
+				user1 = landlord_login(landlords, size_land);   // get the user
+			else
+				user1 = landlord_signup(landlords, size_land, travelers, size_travel);  // get the user
+			systen("cls");    // clean screen
+			LandlordMenu(user1, travelers, size_travel, landlords, size_land, reservations, size_res, properties, size_pro);    // activate landlord menu
+			break;
+
 		case 2:
-			break;  // activate traveler menu
+			flag = loginMenu();
+			if (flag == 1)
+				user1 = traveler_login(landlords, size_land, travelers, size_travel);   // get the user
+			else
+				user1 = traveler_signup(landlords, size_land, travelers, size_travel);  // get the user
+			systen("cls");    // clean screen
+			LandlordMenu(user1, travelers, size_travel, landlords, size_land, reservations, size_res, properties, size_pro);    // activate traveler menu
+			break;
+
 		case 3:
 			cout << "Goodbye!" << endl;
+			// call read to file fumctions
+			write_users(landlords, size_land, travelers, size_travel);
+			write_reservations(reservations, size_res);
+			write_properties(properties, size_pro);
 			freeMemory();  // delete allocated memory
 			break;
 		default:
@@ -1330,29 +1439,54 @@ void mainMenu()
 	} while (choice != 3);   // do as long as the user didnt choose exit
 }
 
-void LandlordMenu(traveler** travelers, int size_travel, landlord** landlords, int size_land, reservation** reservations, int size_res, property** properties, int size_pro)
+bool loginMenu()
+// let the user choose between login to signup, return 1 for login and 2 for signup
+{
+	int choice;   // keep the choice
+	do {
+		cout << "Please enter your choice:" << endl;
+		cout << "1 - login" << endl << "2 - signup" << endl;
+		cin >> choice;
+	} while (choice != 1 && choice != 2);
+	return choice;
+}
+
+void LandlordMenu(landlord* user, traveler** travelers, int size_travel, landlord** landlords, int size_land, reservation** reservations, int size_res, property** properties, int size_pro)
 {
 	int choice;
 	do {
 		cout << "Landlord Menu" << endl;
-		cout << "1 - ";
+		cout << "1 -  "
 
-	} while (choice != 4);
+	}while (choice != 4);
 }
 
-
-void travelerdMenu(traveler** travelers, int size_travel, landlord** landlords, int size_land, reservation** reservations, int size_res, property** properties, int size_pro)
+void travelerdMenu(traveler* user, traveler** travelers, int size_travel, landlord** landlords, int size_land, reservation** reservations, int size_res, property** properties, int size_pro)
 {
 	int choice;
 	do {
 		cout << "Traveler Menu" << endl;
-		cout << "1 - search for  ";
+		cout << "1 - search for a   " << endl;
+		cout << "1 - view reservation history  " << endl;
+		cout << "3 - logout  " << endl;
+		switch (choice)
+		{
+		case 1:
+			search(user, landlords, size_land, reservations, size_res);
+			break;
+		case 2:
 
+			break;
+		case 3:
+			break;
+		default:
+			cout << "no such option exist" << endl;
+		}
 	} while (choice != 3);
 }
 
+void freeMemory(traveler** travelers, landlord** landlords, reservation** reservations, property** properties)
 // free all allocted memory
-void freeMemory(traveler** travelers, int size_travel, landlord** landlords, int size_land, reservation** reservations, int size_res, property** properties, int size_pro)
 {
 	delete[] travelers;
 	travelers = NULL;
@@ -1362,5 +1496,4 @@ void freeMemory(traveler** travelers, int size_travel, landlord** landlords, int
 	reservations = NULL;
 	delete[] properties;
 	properties = NULL;
-
 }
