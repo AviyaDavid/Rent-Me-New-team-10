@@ -38,7 +38,7 @@ void read_users(landlord** landlords_array, int &landi, traveler** travelers_arr
 	users.close();//at end of file- after extraction
 	remove("usersDB.csv");//delete users file after extraction and save all data.
 }
-reservation** read_reservation()
+reservation** read_reservation(int &r_size)
 {
 //function extracting reservations from data base 
 // returns all reservations data from data base on reservations array
@@ -47,7 +47,6 @@ reservation** read_reservation()
 	if (!openfile)//if open failed
 		return NULL;//get out of function
 
-	int r_size = 0;// array size
 	reservation** rList = NULL;
 	while (!reservations.eof())
 	{
@@ -58,13 +57,12 @@ reservation** read_reservation()
 	remove("reservationDB.csv");//delete reservations file after extraction and save all data.
 	return rList;
 }
-property** read_properties()
+property** read_properties(int& p_size)
 {
 	ifstream proper("propertiesDB.csv");// file pointer Open an existing file 
 	if (!openfile)//if open failed
 		return NULL;//get out of function
 
-	int p_size = 0;//size of properties array
 	property** pList = NULL;//initializing property array
 	while (!proper.eof())
 	{
