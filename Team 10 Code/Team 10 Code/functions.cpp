@@ -1,4 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
+#define BREAK "****************************************************"
 #include<stdio.h>
 #include<string>
 #include <string.h>
@@ -360,7 +361,7 @@ traveler* traveler_signup(traveler** travelers, landlord* landlords)
 }
 landlord* landlord_login(landlord* landlords)
 {
-	string id, password;
+	string id, password; 
 	int i, size = sizeof(landlords + 1);
 	int index = 0, flag = 0;
 	cout << "Enter I.D. : ";
@@ -386,61 +387,105 @@ landlord* landlord_login(landlord* landlords)
 	}
 	return &landlords[index];
 }
-landlord* landlord_signup(landlord** landlords, traveler* travelers)
+
+
+
+
+bool check_id(string id)
 {
-	string id, f_name, l_name, p_num, email, password;
-	int i = 0, size = sizeof(landlords);
-	bool flag1 = 0;//false	
-	cout << "Enter your first name please:" << endl;
-	cin >> f_name;
-	cout << "Enter your last name please:" << endl;
-	cin >> l_name;
-	cout << "Enter your phone nunber please:" << endl;
-	cin >> p_num;
-	cout << "Enter your password please:" << endl;
-	cin >> password;
-	cout << "Enter your email please:" << endl;
-	cin >> email;
+	//the function returns true if the string is made of numbers only. else - false.
+	if (id.length() != 9)
+		return false;
+	for (int i = 0; i < id.length(); ++i)
+	{
+		if (isdigit(id[i]) == false)
+			return false;
+	}
+	return true;
+}
+
+
+landlord** landlord_signup(landlord** landlords, traveler** travelers , int* size_of_landlords, int size_of_travelers)
+{
+	
+	int i = 0;
+	landlord new_lanlord;
+	bool flag = true;
 	do
 	{
 		cout << "Enter I.D. : ";
-		cin >> id;
-	} while (id == (*landlords[i]).info.id || id == travelers[i].id);
-	size++;
-	landlord** temp = new landlord * [size];//����� ���� ���� �����
-	for (int i = 0; i < size - 1; i++)
+		cin >>new_lanlord.info.id;
+		if (check_id(new_lanlord.info.id))
+		{
+			for (i; i < size_of_travelers; i++)
+			{
+				if (new_lanlord.info.id == travelers[i]->id)
+				{
+					flag = false;
+					break;
+				}
+
+			}
+			for (i = 0; i < *size_of_landlords && flag; i++)
+			{
+				if (new_lanlord.info.id == landlords[i]->info.id)
+				{
+					flag = false;
+					break;
+				}
+			}
+			if (!flag)
+				cout << "The ID is already registerd. " << endl;
+		}
+		else
+			flag = false;
+
+	} while (flag = false);
+	
+	bool flag1 = false;
+	flag = true;
+	cout << "Enter your first name please:" << endl;
+	cin >> new_lanlord.info.f_name;
+	cout << "Enter your last name please:" << endl;
+	cin >> new_lanlord.info.l_name;
+	do
 	{
-		temp[i]->info.email = landlords[i]->info.email;//����� ����� ����� �����
-		temp[i]->info.f_name = landlords[i]->info.f_name;
-		temp[i]->info.id = landlords[i]->info.id;
-		temp[i]->info.l_name = landlords[i]->info.l_name;
-		temp[i]->info.password = landlords[i]->info.password;
-		temp[i]->info.p_num = landlords[i]->info.p_num;
+		cout << "Enter your phone nunber please:" << endl;
+		cin >> new_lanlord.info.p_num;
+		for (int i = 0; i < new_lanlord.info.p_num.length(); ++i)
+		{
+			if (isdigit(new_lanlord.info.p_num[i]) == false)
+			{
+				flag = false;
+				break;
+			}
+		}
+
+	} while (flag =false);
+	
+	cout << "Enter your password please:" << endl;
+	cin >> new_lanlord.info.password;
+	cout << "Enter your email please:" << endl;
+	cin >> new_lanlord.info.email;
+	landlord** temp = new landlord* [(*size_of_landlords)+1];//����� ���� ���� �����
+	for (int i = 0; i < *size_of_landlords; i++)
+	{
+		temp[i] = landlords[i];
+
 	}
-	temp[size]->info.id = id;//����� �� ���� ���� �����
-	temp[size]->info.f_name = f_name;
-	temp[size]->info.l_name = l_name;
-	temp[size]->info.password = password;
-	temp[size]->info.p_num = p_num;
-	temp[size]->info.email = email;
+	temp[(*size_of_landlords)++] = &new_lanlord;
 	delete[] landlords;//����� �����
-	landlords = new landlord * [size];//����� ���� ���� �����
-	for (int i = 0; i < size; i++)
-	{
-		landlords[i]->info.email = temp[i]->info.email;//����� ����� ����� �����
-		landlords[i]->info.f_name = temp[i]->info.f_name;
-		landlords[i]->info.id = temp[i]->info.id;
-		landlords[i]->info.l_name = temp[i]->info.l_name;
-		landlords[i]->info.password = temp[i]->info.password;
-		landlords[i]->info.p_num = temp[i]->info.p_num;;//����� ����� ����� �����
-	}
-	return *landlords;
+	landlords = new landlord* [*size_of_landlords];//����� ���� ���� �����
+	landlords = temp;
+
+	return landlords;
 }
 
-void print_properties(property** properties) // print all the properties in the properties list
+void print_properties(property** properties, int size_of_properties) // print all the properties in the properties list
 {
-	for (int i = 0; i < sizeof(properties); i++)
+	for (int i = 0; i < size_of_properties; i++)
 	{
+		
 		cout << i + 1;
 		print_property(properties[i]);
 		cout << "___________________________________" << endl;
@@ -629,6 +674,7 @@ property** sort(property** ads, int sizeof_ads ,int sort_op) // return list of r
 
 reservation** payment(property* chosen, traveler renter, reservation** reservations, int* size_of_reservations, date chek_in, date chek_out)
 {
+	//לבדןק!!
 	string cvv, card_num, card_owner_id;
 	date due;
 	cout << "Number of card:" << endl;
@@ -659,14 +705,15 @@ reservation** payment(property* chosen, traveler renter, reservation** reservati
 		cout << "Wrong input, CVV should be only for 3 digits. Please enter again" << endl;
 		cin >> cvv;
 	}
-	reservation* new_reservation;
+	reservation temp_res;
+	reservation* new_reservation = &temp_res; // Creating new reservation.
 	(*new_reservation).p_name = (*chosen).p_name;
 	(*new_reservation).renter_id = renter.id;
 	(*new_reservation).loc = (*chosen).location;
 	(*new_reservation).check_in = chek_in;
 	(*new_reservation).check_out = chek_out;
 	(*new_reservation).rate = 0;
-	(*new_reservation).israted = false;
+	(*new_reservation).israted = false; 
 
 	reservation** temp = new reservation * [*size_of_reservations + 1];
 	for (int i = 0; i < *size_of_reservations; i++)
@@ -692,13 +739,11 @@ reservation** payment(property* chosen, traveler renter, reservation** reservati
 	return reservations;
 
 }
-property** add_property(landlord host, property** properties, int* size_of_properties)
+property** add_property(landlord *host, property** properties, int* size_of_properties)
 {
 	int x;
-	property* new_property;
-	cout << "Owner ID: " << endl;
-	cin >> (*new_property).owner_id;
-	cout << endl;
+	property new_prop;
+	property* new_property = &new_prop;
 	cout << "Description: " << endl;
 	cin >> (*new_property).description;
 	cout << endl;
@@ -708,26 +753,20 @@ property** add_property(landlord host, property** properties, int* size_of_prope
 	cout << "Location: " << endl;
 	cin >> (*new_property).location;
 	cout << endl;
-	cout << "Price per night: " << endl;
-	cin >> (*new_property).price;
-	while ((*new_property).price < 0)
+	do
 	{
-		cout << "Wrong input, price should be a possitive number. Please enter again" << endl;
+		cout << "Price per night. A possitive number: " << endl;
 		cin >> (*new_property).price;
-	}
-	cout << endl;
-	cout << "Capasity: " << endl;
-	cin >> (*new_property).capacity;
-	while ((*new_property).capacity < 0)
+	} while ((*new_property).price <= 0);
+	do
 	{
-		cout << "Wrong input, capasity should be a possitive number. Please enter again" << endl;
+		cout << endl << "Capacity. A possitive number: " << endl;
 		cin >> (*new_property).capacity;
-	}
-	cout << endl;
-	cout << "Nearby Attractions: " << endl;
-	cin >> (*new_property).near;
-	cout << endl;
-	cout << "Availability: \n1.Yes \n else-No" << endl;
+
+	} while ((*new_property).capacity <= 0);
+	cout <<endl<< "Nearby Attractions: " << endl;
+	cin >> (*new_property).near; 
+	cout <<endl<< "Availability: \n1.Yes \n else-No" << endl;
 	cin >> x;
 	if (x == 1)
 		new_property->status = true;
@@ -812,23 +851,11 @@ property** add_property(landlord host, property** properties, int* size_of_prope
 	property** temp = new property * [*size_of_properties + 1];
 	for (int i = 0; i < *size_of_properties; i++)
 	{
-		temp[i] = (properties)[i];
+		temp[i] = properties[i];
 	}
-	temp[*size_of_properties + 1] = new_property;
-	*size_of_properties += 1;
-	for (int i = 0; i < *size_of_properties; i++)
-	{
-		delete properties[i];
-	}
-	property** properties = new property * [*size_of_properties];
-	for (int i = 0; i < *size_of_properties; i++)
-	{
-		properties[i] = temp[i];
-	}
-	for (int i = 0; i < *size_of_properties; i++)
-	{
-		delete temp[i];
-	}
+	temp[(*size_of_properties) ++] = new_property;
+	delete[] properties;
+	properties = temp;
 
 	return properties;
 }
@@ -840,7 +867,7 @@ property** editMenu(landlord* host, property** properties, int* size_of_properti
 	int check = 0;
 	string name;
 	cout << "Properties list:" << endl;
-	print_properties(host->prop);
+	print_properties(host->prop, *size_of_properties);//לשנות גם אצל יעקב 
 	cout << "For Edit property press 1" << endl;
 	cout << "For Delete property press 2" << endl;
 	cout << "For Exit press 0" << endl;
@@ -849,9 +876,12 @@ property** editMenu(landlord* host, property** properties, int* size_of_properti
 	{
 		while (x != 1 || x != 2)
 		{
+
 			cout << "Wrong input. Please enter again" << endl;
 			cin >> x;
 		}
+		if (x == 0)
+			break;
 		cout << "Enter the name of the property you want to Edit/Delete" << endl;
 		cin >> name;
 		for (int i = 0; i < *size_of_properties; i++)
@@ -869,12 +899,12 @@ property** editMenu(landlord* host, property** properties, int* size_of_properti
 		{
 			if (x == 1)
 			{
-				edit((*host).prop[flag]);
+				edit((properties[flag]));
 				cout << "Property updated." << endl;
 			}
 			if (x == 2)
 			{
-				deletep((*host).prop[flag], properties, size_of_properties);
+				deletep(properties[flag], properties, size_of_properties);
 				cout << "Property deleted." << endl;
 			}
 		}
@@ -895,17 +925,12 @@ property* edit(property* old_prop)
 {
 	int x;
 	cout << "Edit Property:" << endl;
-	cout << " Press: \n 0-Exit \n 1-Owner Id \n 2-Description \n 3- Property name \n 4-Location \n 5- Price per night \n 6-Capasity \n 7-Nearby Attractions \n 8- Availability \n 9-Amenities \n10-Number of rates" << endl;
+	cout << " Press: \n 1-Exit \n 2-Description \n 3- Property name \n 4-Location \n 5- Price per night \n 6-Capasity \n 7-Nearby Attractions \n 8- Availability \n 9-Amenities \n10-Number of rates" << endl;
 	cin >> x;
-	while (x != 0)
+	while (x != 1)
 	{
 		switch (x)
 		{
-		case 1:
-			cout << "Enter a new Owner ID: " << endl;
-			cin >> (*old_prop).owner_id;
-			cout << endl;
-			break;
 		case 2:
 			cout << "Enter a new Description: " << endl;
 			cin >> (*old_prop).description;
@@ -1099,33 +1124,198 @@ property* edit(property* old_prop)
 }
 property** deletep(property* p_chosen, property** properties, int* size_of_properties)
 {
-	int chek = 0;
+	int check = 0;
 	for (int i = 0; i < *size_of_properties; i++)
 	{
 		if ((*properties[i]).p_name == (*p_chosen).p_name)
 		{
-			chek = 1;
+			check = 1;
 		}
 	}
-	if (chek == 1)
+	if (check == 1)
 	{
-		property** temp = new property * [*size_of_properties];
-		for (int i = 0; i < *size_of_properties; i++)
+		
+		property** temp = new property * [*size_of_properties-1];
+		for (int i = 0, j =0 ; i < *size_of_properties; ++i, ++j)
 		{
 			if ((*properties[i]).p_name != (*p_chosen).p_name)
 			{
-				temp[i] = properties[i];
+				temp[j] = properties[i];
 			}
+			else
+				--j;
 
 		}
 		delete[]properties;
 		*size_of_properties -= 1;
-		property** properties = new property * [*size_of_properties];
-		for (int i = 0; i < *size_of_properties; i++)
-		{
-			properties[i] = temp[i];
-		}
-		delete[]temp;
+		properties = temp;
 	}
 	return properties;
+}
+// ********* print the traveler's resrvatios history *********
+void print_reservations(reservation* reservations, int size_res, property* properties, int size_pro, string id)
+{
+	time_t now = time(0);
+	tm* ltm = localtime(&now);  // get the local time 
+	date today;   // create today's  date
+	today.year = ltm->tm_year + 1900;
+	today.month = ltm->tm_mon + 1;
+	today.day = ltm->tm_mday;
+
+	int j;     // index for the traveler's reservations
+	for (int i = 0; i < size_res; ++i) // go over the reservations array
+	{
+		if (id == reservations[i].renter_id)   // if the reservation belong to the currently registered traveler
+		{
+			// printing the reservation details
+			++j;
+			cout << "reservation number: " << j << "\n";
+			cout << "property's name: " << reservations[i].p_name << endl;
+			cout << "check in: " << reservations[i].check_in.day << "/" << reservations[i].check_in.month << "/" << reservations[i].check_in.year << endl;
+			cout << "check out: " << reservations[i].check_out.day << "/" << reservations[i].check_out.month << "/" << reservations[i].check_out.year << "\n";
+			cout << "property's location: " << reservations[i].loc << "\n";
+			if (reservations[i].israted == true)  // check if the reservation was rated
+				cout << "personal rating: " << reservations[i].rate << "\n";
+			else
+			{
+				cout << "personal rating: not rated yet\n";
+				if (compDates(today, reservations[i].check_out) == 1)   // check that the check out date 
+				{
+					int flag;  //  keep 1 if the traveler want to rate the property
+					cout << "would you like to rate the property?\n1 - Yes\nelse - No " << endl;
+					cin >> flag;
+					if (flag == 1)
+						rate((reservations + i), properties, size_pro);   // sent to get rate
+				}
+			}
+
+			cout << BREAK << endl;   // print the line breaker between each reservation
+		}
+	}
+}
+
+// ********* get rating from user **********
+void rate(reservation* res, property** properties, int size_pro)
+{
+	int per_rate;
+	int i;  // keep the index of the wanted property
+	for (i = 0; i < size_pro; ++i)   // go over the properties array
+		if (res->p_name == properties[i]->p_name)    // check for the right property
+			break;
+	do {
+		cout << "please rate the property, enter a number between 5 to 1\n";
+		cin >> per_rate;    // get the rating
+	} while (per_rate < 1 || per_rate > 5);   // check for invalid rating
+
+	res->rate = per_rate;
+	res->israted = true;
+	int newRate = stoi(properties[i]->amenities[9]);    // get the current rating of the property
+	newRate = ((properties[i]->num_of_rates * newRate) + per_rate) / (properties[i]->num_of_rates + 1);   // calc the new rate
+	++(properties[i]->num_of_rates);  // update the number of people who rated the property
+	properties[i]->amenities[9] = to_string(newRate);  // // update the rating
+}
+
+
+/* compare between dates */
+int compDates(date a, date b)
+/* the function compare two dates, return 0 if the dates are equal, 1 if the first is bigger than the second or else it return 2 */
+{
+	// check who is bigger by year
+	if (a.year > b.year)
+		return 1;
+	else if (a.year < b.year)
+		return 2;
+
+	// check by month
+	else if (a.month > b.month)
+		return 1;
+	else if (a.month < b.month)
+		return 2;
+
+	// check by day
+	else if (a.day > b.day)
+		return 1;
+	else if (a.day < b.day)
+		return 2;
+
+	// the dates are equal
+	else
+		return 0;
+}
+
+
+// ****** Main Menu ****** 
+void mainMenu()
+{
+	traveler** travelers = NULL;        // travelers array
+	int size_travel = 0;     // the size of the travelers array
+
+	landlord** landlords = NULL;        // landlords array
+	int size_land = 0;       // the size of the landlords array
+
+	reservation** reservations = NULL;  // reservations array
+	int size_res = 0;        // the size of the reservaions array
+
+	property** properties = NULL;       // reservations property
+	int size_pro = 0;        // the size of the reservations property
+
+	// the  reading from files functions needs to get the sizes by reference' 
+	read_users(travelers, landlords, size_travel, size_land);   // initialize users arrays
+	*reservations = read_reservation(size_res);   // initialize reservations array
+	*properties = read_properties(size_pro);  // initialize properties array
+
+	int choice;
+	cout << "Welcome to RentMe" << endl;
+	do {
+		cout << "Main Menu" << endl << "1 - enter as a landlord" << endl << "2 - enter as a traveler" << endl << "3 - exit" << endl;
+		cin >> choice;
+		switch (choice)
+		{
+		case 1:
+			break;   // activate landlord menu
+		case 2:
+			break;  // activate traveler menu
+		case 3:
+			cout << "Goodbye!" << endl;
+			freeMemory();  // delete allocated memory
+			break;
+		default:
+			cout << "no such option" << endl;
+		}
+	} while (choice != 3);   // do as long as the user didnt choose exit
+}
+
+void LandlordMenu(traveler** travelers, int size_travel, landlord** landlords, int size_land, reservation** reservations, int size_res, property** properties, int size_pro)
+{
+	int choice;
+	do {
+		cout << "Landlord Menu" << endl;
+		cout << "1 - ";
+
+	} while (choice != 4);
+}
+
+
+void travelerdMenu(traveler** travelers, int size_travel, landlord** landlords, int size_land, reservation** reservations, int size_res, property** properties, int size_pro)
+{
+	int choice;
+	do {
+		cout << "Traveler Menu" << endl;
+		cout << "1 - search for  ";
+
+	} while (choice != 3);
+}
+
+// free all allocted memory
+void freeMemory(traveler** travelers, int size_travel, landlord** landlords, int size_land, reservation** reservations, int size_res, property** properties, int size_pro)
+{
+	delete[] travelers;
+	travelers = NULL;
+	delete[] landlords;
+	landlords = NULL;
+	delete[] reservations;
+	reservations = NULL;
+	delete[] properties;
+	properties = NULL;
+
 }

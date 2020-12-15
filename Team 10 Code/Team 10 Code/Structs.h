@@ -48,5 +48,6 @@ struct landlord
 	traveler info;
 	bank_account transfer;
 	property** prop=NULL;//check
+	
 };
 #endif
