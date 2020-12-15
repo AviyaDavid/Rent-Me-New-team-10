@@ -260,33 +260,41 @@ void write_properties(property** properties, int p_size)
 }
 
 
-traveler* traveler_login(traveler* travelers, int sizet)
+traveler* traveler_login(traveler** travelers, int sizet)
 {
 	//The function receives input from the user and after checking the integrity creates a new array with the user
-	int flag = 0,i;
+	int flag = 0, i;
+	string id, password;
 	do
 	{
 		cout << "Enter I.D. : ";
-		cin >> travelers->id;
-		i++;
-	} while (travelers->id == travelers[i].id);//check id
-	{
-		if (i == sizet)
-			return NULL;
-	}
+		cin >> id;
+		for (i = 0; i < sizet; i++)
+		{
+			if (id == travelers[i]->id)
+			{
+				flag = 1;
+				break;
+			}
+		}
+		if (flag != 1)
+			cout << "User not found." << endl;
+	} while (flag != 1);//check id
+	flag = 0;
 	do
 	{
 		cout << "Enter Password: ";
-		cin >> travelers->password;
+		cin >> password;
 		flag++;
 		cout << "[" << flag << ":3]" << endl;
-	} while (travelers->password != travelers[i].password || flag == 3);
+
+	} while (password != travelers[i]->password && flag != 3);
 	if (flag == 3)
 	{
 		cout << "Incorrect password, user blocked!!" << endl;
 		return NULL;
 	}
-	return &travelers[i];
+	return travelers[i];
 }
 traveler* traveler_signup(traveler** travelers, landlord** landlords, int *size_of_travelers, int size_of_landlord)
 {
@@ -363,33 +371,42 @@ traveler* traveler_signup(traveler** travelers, landlord** landlords, int *size_
 
 	return *travelers;
 }
-landlord* landlord_login(landlord* landlords, int *size_of_landlords)
+landlord* landlord_login(landlord** landlords, int size_of_landlords)
 { 
-	int i, size = *size_of_landlords +1;
-	int index = 0, flag = 0;
-	cout << "Enter I.D. : ";
-	cin >> landlords->info.id;
-	for (i = 0; i < size; i++)
+	int flag = 0, i;
+	string id, password;
+	do
 	{
-		if (landlords->info.id == landlords[i].info.id)
-			index = i;//true
-	}
-	if (index == 0)
-		return NULL;
+		cout << "Enter I.D. : ";
+		cin >> id;
+		for (i = 0; i < size_of_landlords; i++)
+		{
+			if (id == landlords[i]->info.id)
+			{
+				flag = 1;
+				break;
+			}
+		}
+		if (flag != 1)
+			cout << "User not found." << endl;
+	} while (flag != 1);//check id
+	flag = 0;
 	do
 	{
 		cout << "Enter Password: ";
-		cin >> landlords->info.password;
+		cin >> password;
 		flag++;
 		cout << "[" << flag << ":3]" << endl;
-	} while (landlords->info.password != landlords[index].info.password || flag == 3);
+
+	} while (password != landlords[i]->info.password && flag != 3);
 	if (flag == 3)
 	{
 		cout << "Incorrect password, user blocked!!" << endl;
 		return NULL;
 	}
-	return &landlords[index];
+	return landlords[i];
 }
+
 landlord** landlord_signup(landlord** landlords, traveler** travelers , int* size_of_landlords, int size_of_travelers)
 {
 	
