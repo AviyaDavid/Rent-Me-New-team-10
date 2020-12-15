@@ -481,7 +481,7 @@ void print_confirmation(property* booked, date from, date to, int nights) // pri
 	cout << "Final price: " << nights * booked->price << endl;
 };
 
-property* search(property** prop_list, reservation** res_list) // search process. RETURN: pointer to the chosen property to rent
+property* search(property** prop_list, reservation** res_list, int sizeof_properties, int sizeof_res, traveler trav) // search process. RETURN: pointer to the chosen property to rent
 {
 	string loc; // location
 	date checkin; // date for checkin
@@ -492,12 +492,13 @@ property* search(property** prop_list, reservation** res_list) // search process
 	int count = 0; // number of relevant ads
 	int choice, am; // menu choice 
 	string amenities[10]; // array of selected amenities for search process
-	time_t current = time(0); 
+	time_t current = time(0);
 	tm* ltm = localtime(&current);
 	date current_date; // current date 
-	current_date.day = ltm->tm_mday; 
+	current_date.day = ltm->tm_mday;
 	current_date.month = ltm->tm_mon;
 	current_date.year = ltm->tm_year;
+
 	cout << "Enter location: ";
 	cin >> loc;
 	do {
@@ -512,10 +513,10 @@ property* search(property** prop_list, reservation** res_list) // search process
 	} while (compDates(current_date, checkin) == 1 || compDates(checkin, checkout) != 2);
 	cout << "Enter number of travelers: ";
 	cin >> travelers;
-	for (int i = 0; i < sizeof(prop_list); i++)
+	for (int i = 0; i < sizeof_properties; i++)
 	{
 		if (prop_list[i]->location == loc && prop_list[i]->capacity >= travelers) // search by location and capacity
-			for (int j = 0; j < sizeof(res_list); j++) 
+			for (int j = 0; j < sizeof_res; j++)
 				if (prop_list[i]->p_name == res_list[j]->p_name) // verifing availability
 					if (compDates(res_list[j]->check_out, checkin) == 1 && compDates(checkout, res_list[j]->check_in) == 1)
 						available = false;
@@ -528,17 +529,23 @@ property* search(property** prop_list, reservation** res_list) // search process
 	}
 	property** firstads = ads;
 	if (count == 0)
+	{
+		cout << "No ads found." << endl;
 		return NULL;
+	}
 	else do {
 		if (ads)
 			print_properties(ads, count);
 		else
 			cout << "No ads found." << endl;
-		cout << endl << count + 1 << ". Filters" << count + 2 << ". Sort" << endl;
+		cout << endl << count + 1 << ".Filters" << count + 2 << ".Sort" << count + 3 << ".Return to main search" << endl;
 		cout << "Choose an ad or an option: ";
 		cin >> choice;
 		if (choice <= count) // if a property is chosen
-			return ads[choice]; // return it
+		{
+			payment(ads[choice], trav, res_list, sizeof_res, checkin, checkout);
+			return ads[choice];
+		}
 		if (choice == count + 1) // if filter option selected 
 		{
 			cout << "Accessibility ? 1.Yes 2.No" << endl;
@@ -573,9 +580,11 @@ property* search(property** prop_list, reservation** res_list) // search process
 			if (ads)
 				ads = sort(ads, count, am);
 			else
-				cout << "No ads found." << endl;
+				cout << "No ads to sort." << endl;
 		}
-	} while (choice > count); 
+		if (choice == count + 3)
+			return NULL;
+	} while (choice > count);
 }
 
 void yes_no(string am[10], int index) // help to convert 1 tp Yes and 2 to No
