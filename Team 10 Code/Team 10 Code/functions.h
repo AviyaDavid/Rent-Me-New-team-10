@@ -39,7 +39,7 @@ date stringtodate(string str);// casting from string to date
 string datetostring(date d);//casting from date to string
 
 //--- WRITE INTO FILES---//
-void write_users(landlord** landlords, int land_len, traveler** travelers, int trav_len);//write to file all users details
+void writeUsers( traveler** travelers, int& trav_len, landlord** landlords, int& land_len);//write to file all users details
 string travelertostr(traveler* t, int size);//traveler cast to string
 void write_reservations(reservation** reservations, int res_len);//write to file all reservations details details
 void write_properties(property** properties, int p_len);//write to file all properties details

@@ -14,7 +14,7 @@ using namespace std;
 //--- READING FROM FILE FUNCTINOS---//
 traveler** readTravelers(int& t_size)
 {
-	ifstream fsIn("C:/Users/User/source/repos/mon-rent/usersDB.txt");  // open the file
+	ifstream fsIn("C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/usersDB.txt");  // open the file
 	if (!fsIn.is_open())   // failed at opening
 	{
 		cout << "failed at opening file" << endl;
@@ -42,7 +42,7 @@ traveler** readTravelers(int& t_size)
 
 landlord** readLandlords(int& l_size)
 {
-	ifstream fsIn("C:/Users/User/source/repos/mon-rent/usersDB.txt");  // open the file
+	ifstream fsIn("C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/usersDB.txt");  // open the file
 	if (!fsIn.is_open())   // failed at opening
 	{
 		cout << "failed at opening file" << endl;
@@ -87,7 +87,7 @@ reservation** read_reservation(int& r_size)
 	//function extracting reservations from data base 
 	// returns all reservations data from data base on reservations array
 
-	ifstream reservations("C:/Users/User/source/repos/mon-rent/reservationDB.txt");// file pointer Open an existing file 
+	ifstream reservations("C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/reservationDB.txt");// file pointer Open an existing file 
 	if (!reservations)//if open failed
 	{
 		cout << "ERROR USERS FILE DOES NOT EXIST" << endl;//error messege
@@ -117,7 +117,7 @@ reservation** read_reservation(int& r_size)
 }
 property** read_properties(int& p_size)
 {
-	ifstream proper("C:/Users/User/source/repos/mon-rent/propertiesDB.txt");// file pointer Open an existing file 
+	ifstream proper("C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/propertiesDB.txt");// file pointer Open an existing file 
 	if (!proper.is_open())//if open failed
 	{
 		cout << "ERROR USERS FILE DOES NOT EXIST" << endl;//error messege
@@ -232,7 +232,7 @@ string datetostring(date d)//to format dd/mm/yy
 //---WRITE FUNCTIONS--//
 void writeUsers(traveler** travelers, int& size_tra, landlord** landlords, int& size_land)
 {
-	ofstream fsOut("C:/Users/User/source/repos/mon-rent/NewUsersDB.txt");   //open file for writing
+	ofstream fsOut("C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/NewUsersDB.txt");   //open file for writing
 	if (!fsOut)
 	{
 		cout << "failed at opening file" << endl;
@@ -254,7 +254,7 @@ void writeUsers(traveler** travelers, int& size_tra, landlord** landlords, int& 
 	}
 
 	string due_month, due_year;
-	fsOut << size_land;   // print size of landlord array
+	fsOut << size_land << ' ';   // print size of landlord array
 	for (int i = 0; i < size_land; ++i) {
 		due_month = to_string(landlords[i]->transfer.due.month);
 		due_year = to_string(landlords[i]->transfer.due.year);
@@ -270,10 +270,10 @@ void writeUsers(traveler** travelers, int& size_tra, landlord** landlords, int& 
 	}
 	fsOut.close();//close file
 	// removing the old file 
-	remove("C:/Users/User/source/repos/mon-rent/usersDB.txt");
+	remove("C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/usersDB.txt");
 
 	// renaming the updated file with the old file name 
-	rename("C:/Users/User/source/repos/mon-rent/NewUsersDB.txt", "C:/Users/User/source/repos/mon-rent/usersDB.txt");
+	rename("C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/NewUsersDB.txt", "C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/usersDB.txt");
 }
 string travelertostr(traveler* t, int size)
 {//traveler data inserted to string for file
@@ -284,7 +284,7 @@ string travelertostr(traveler* t, int size)
 void write_reservations(reservation** reservations, int r_size)
 {
 	ofstream p_reservation;//pointer to write into file
-	p_reservation.open("C:/Users/User/source/repos/mon-rent/newReservationDB.txt"); //create a file
+	p_reservation.open("C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/newReservationDB.txt"); //create a file
 	p_reservation << r_size << ' ';
 	for (int i = 0; i < r_size; i++)
 	{
@@ -298,15 +298,15 @@ void write_reservations(reservation** reservations, int r_size)
 	}
 	p_reservation.close();
 	// removing the old file 
-	remove("C:/Users/User/source/repos/mon-rent/reservationDB.txt");
+	remove("C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/reservationDB.txt");
 
 	// renaming the updated file with the old file name 
-	rename("C:/Users/User/source/repos/mon-rent/newReservationDB.txt", "C:/Users/User/source/repos/mon-rent/reservationDB.txt");
+	rename("C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/newReservationDB.txt", "C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/reservationDB.txt");
 }
 void write_properties(property** properties, int p_size)
 {
 	fstream p_prop;//pointer to write into file
-	p_prop.open("C:/Users/User/source/repos/mon-rent/newPropertiesDB.txt"); //create a file
+	p_prop.open("C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/newPropertiesDB.txt"); //create a file
 	p_prop << p_size << ' ';
 	for (int i = 0; i < p_size; i++)
 	{
@@ -324,10 +324,10 @@ void write_properties(property** properties, int p_size)
 	}
 	p_prop.close();
 	// removing the old file 
-	remove("propertiesDB.csv");
+	remove("C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/propertiesDB.txt");
 
 	// renaming the updated file with the old file name 
-	rename("newPropertiesDB.csv", "propertiesDB.csv");
+	rename("C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/newPropertiesDB.txt", "C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/propertiesDB.txt");
 }
 
 traveler* traveler_login(traveler** travelers, int sizet)
@@ -1503,7 +1503,7 @@ void mainMenu()
 		case 3:
 			cout << "Goodbye!" << endl;
 			// call read to file functions
-			write_users(landlords, size_land, travelers, size_travel);
+			writeUsers(travelers, size_travel, landlords, size_land);
 			write_reservations(reservations, size_res);
 			write_properties(properties, size_pro);
 			freeMemory(travelers, landlords, reservations, properties);  // delete allocated memory
