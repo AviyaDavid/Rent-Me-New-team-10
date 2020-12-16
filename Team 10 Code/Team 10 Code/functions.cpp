@@ -1,5 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
-#define BREAK "****************************************************"
+#define BREAK "_________________________________________"
 #include<stdio.h>
 #include<string>
 #include <string.h>
@@ -140,59 +140,6 @@ property** read_properties(int& p_size)
 	return p_pList;
 }
 
-//--- SUB-FUNCTIONS FOR FILES---//
-string* readLine(ifstream& fp,string line[18])
-{//returns line from file separated by delimeter into array
-	int i = 0;//index for string array
-	while (!fp.eof() && fp.peek() != '\n')
-	{
-		getline(fp, line[i], ',');// read details from file
-		i++;
-	}
-	return line;
-}
-void strtotraveler(string* line, traveler* temp)
-{//returns traveler containing all data from line
-	temp->id=line[0];//identification number
-	temp->f_name=line[1];//first name
-	temp->l_name=line[2];//last name
-	temp->p_num=line[3];//phone number
-	temp->email=line[4];// email address
-	temp->password=line[5];//password
-}
-void strtolandlord(string* line, landlord* temp)
-{//returns landlord containing all data from line
-	strtotraveler(line, &(temp->info));
-	temp->transfer.card_num=line[6];//credit card number
-	temp->transfer.due = stringtodate(line[7]);//casting to date type and insert to due date
-	temp->transfer.cvv= line[8];
-}
-void strtores(string* line,reservation* temp)
-{//returns reservation containing all data from line
-	temp->p_name = line[0];//property name
-	temp->renter_id = line[1];//renter id
-	temp->check_in = stringtodate(line[2]);//check in date
-	temp->check_out = stringtodate(line[3]);//check out date
-	temp->loc= line[4];// location
-	temp->rate = stoi(line[5]);//rate
-	temp->israted = line[6].compare("1")?true:false;//rate
-}
-
-void strtopro(string* line, property* temp)
-{//returns property containing all data from line
-	temp->owner_id= line[0];
-	temp->description= line[1];
-	temp->p_name= line[2];//property name
-	temp->location = line[3];
-	temp->price = stoi(line[4]);
-	temp->capacity = stoi(line[5]);
-	temp->near= line[6];//nearby attractions
-	for (int i = 0; i < 10; i++)//ameneties
-		temp->amenities[i] = line[i+7];//words 7,8,9,10,11,12,13,14,15,16
-	temp->status = line[17].compare("1") ? true : false;//rate
-	temp->num_of_rates = stoi(line[18]);
-
-}
 
 
 //---USEFUL AND CASTING FUNCTIONS---//
@@ -275,12 +222,7 @@ void writeUsers(traveler** travelers, int& size_tra, landlord** landlords, int& 
 	// renaming the updated file with the old file name 
 	rename("C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/NewUsersDB.txt", "C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/usersDB.txt");
 }
-string travelertostr(traveler* t, int size)
-{//traveler data inserted to string for file
-	string tinput;
-	tinput= t->id + ','+ t->f_name + ','+ t->l_name + ','+ t->p_num + ',' +t->email + ',' +t->password + ',' ;
-	return tinput;
-}
+
 void write_reservations(reservation** reservations, int r_size)
 {
 	ofstream p_reservation;//pointer to write into file
@@ -329,6 +271,7 @@ void write_properties(property** properties, int p_size)
 	// renaming the updated file with the old file name 
 	rename("C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/newPropertiesDB.txt", "C:/Users/User/Desktop/Rent-Me-New-team-10/Team 10 Code/propertiesDB.txt");
 }
+
 
 traveler* traveler_login(traveler** travelers, int sizet)
 {
@@ -602,16 +545,14 @@ void print_properties(property** properties, int size_of_properties) // print al
 
 void print_property(property* prop) // print all the details about a property
 {
-	cout << ". Name: " << prop->p_name << "\n Description: " << prop->description << "\n Location: " << prop->location << "\n Capacity: " << prop->capacity << "\n Amenities: ";
+	cout << "Name: " << prop->p_name << "\nLocation: " << prop->location << "\nDescription: " << prop->description << endl;
+	cout << "Capacity: " << prop->capacity << "\nAmenities: ";
+
 	string myarr[10] = { "Accessibility: ", "Smoking: ", "Pets: ", "Balcony", "Washing machine", "Wifi", "Pool", "Number of beds: ", "Number of rooms: ", "Rate: " };
-	for (int i = 0; i < 3; i++)
-		cout << myarr[i] << prop->amenities[i] << " ";
-	for (int i = 3; i < 7; i++)
-		if (prop->amenities[i] == "Yes")
-			cout << myarr[i] << " ";
-	for (int i = 7; i < 10; i++)
-		cout << myarr[i] << prop->amenities[i] << " ";
-	cout << "___________________________________" << endl;
+	for (int i = 0; i < 10; ++i)
+		cout << myarr[i] << ": " << prop->amenities[i] << endl;
+	cout << "Price per night: " << prop->price << endl;
+	cout << BREAK << endl;
 };
 
 void print_confirmation(property* booked, date from, date to, int nights) // print a confirmation with order main details
