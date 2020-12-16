@@ -1,15 +1,3 @@
 ﻿  functions.cpp
-C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(996,9): warning C4101: 'y': unreferenced local variable
-  main.cpp
-  Generating Code...
-C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(95): warning C4172: returning address of local variable or temporary: line
-C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(107): warning C4172: returning address of local variable or temporary: a
-C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(130): warning C4172: returning address of local variable or temporary: a
-C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(117): warning C4172: returning address of local variable or temporary: a
-C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(148): warning C4172: returning address of local variable or temporary: a
-C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(668): warning C4715: 'search': not all control paths return a value
-C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1310): error C4700: uninitialized local variable 'j' used
-C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1213): error C4700: uninitialized local variable 'k' used
-C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1223): error C4700: uninitialized local variable 'z' used
-C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1480): error C4700: uninitialized local variable 'choice' used
-C:\Users\97252\Desktop\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(1518): error C4700: uninitialized local variable 'choice' used
+C:\Users\Aviya\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(664): warning C4715: 'search': not all control paths return a value
+  Team 10 Code.vcxproj -> C:\Users\Aviya\Documents\Rent-Me-New-team-10\Team 10 Code\Debug\Team 10 Code.exe

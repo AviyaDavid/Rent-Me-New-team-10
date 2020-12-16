@@ -8,11 +8,11 @@ reservation** read_reservation(int &r_size);//reads from reservations data base 
 property** read_properties(int& p_size);//reads from properties data base and returns array with data from file
 
 //--- SUB-FUNCTIONS FOR FILES---//
-string* readLine(ifstream& fp);//returns line from file separated by delimeter into array
-traveler* strtotraveler(string* line);//returns traveler containing all data from line
-landlord* strtolandlord(string* line);//returns landlord containing all data from line
-reservation* strtores(string* line);//returns reservation containing all data from line
-property* strtopro(string* line);//returns property containing all data from line
+string* readLine(ifstream& fp,string line[18]);//returns line from file separated by delimeter into array
+void strtotraveler(string* line, traveler*);//returns traveler containing all data from line
+void strtolandlord(string* line,landlord*);//returns landlord containing all data from line
+void strtores(string* line,reservation*);//returns reservation containing all data from line
+void strtopro(string* line, property*);//returns property containing all data from line
 
 //---USEFUL AND CASTING FUNCTIONS---//
 template <typename T>

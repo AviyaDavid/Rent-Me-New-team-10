@@ -15,7 +15,7 @@ struct property
 	int price=0, capacity=0;
 	string near;
 	string amenities[10];//accessability,smoke,pet,balcony,wash,wifi,pool,bed_num room_num,rate
-	bool status;
+	bool status=false;
 	int num_of_rates=0;
 };
 
@@ -24,8 +24,8 @@ struct reservation
 	string p_name, renter_id;;
 	date check_in, check_out;
 	string loc;
-	int rate;
-	bool israted;
+	int rate=0;
+	bool israted=false;
 };
 
 struct bank_account
