@@ -12,89 +12,133 @@ using namespace std;
 
 
 //--- READING FROM FILE FUNCTINOS---//
-void read_users(landlord** landlords_array, int &landi, traveler** travelers_array, int &travi)
-{//the function recieves two non-initialized arrays - for each type of user, their length is 0.
-//and two integer by reference representing size of arrays
-	//the function reads from file and according to users type it will insert the user to its array.
-
-	ifstream users("usersDB.csv");// file pointer Open an existing file 
-	if (!users)//if open failed
+traveler** readTravelers(int& t_size)
+{
+	ifstream fsIn("C:/Users/User/source/repos/mon-rent/usersDB.txt");  // open the file
+	if (!fsIn.is_open())   // failed at opening
 	{
-		cout << "ERROR USERS FILE DOES NOT EXIST" << endl;//error messege
-		exit(1);//get out of system
+		cout << "failed at opening file" << endl;
+		exit(1);
 	}
-	string line[18];
-	landlord land;
-	traveler tra;
-	landlord* l= &land;
-	traveler* t=&tra;
-
-	while (!users.eof() && users.peek() == '$')//if not end of file and in landlords user type
-	{//recieve all landlords details from file
-		landi++;//count number of landlords
-		strtolandlord(readLine(users, line), l);
-		landlords_array = install_new_data<landlord>(landlords_array, landi, l);//add space to landlords array and insert new landlord
-	}
-	if (users.peek() == '$')//if delimiting sign-- need to skip it and insert travelers to array
+	fsIn >> t_size;   // get the number of travelers
+	traveler* newTrav = new traveler[t_size];
+	traveler** p_newTrav = new traveler * [t_size];
+	if (!newTrav)
 	{
-		users.ignore(3, '\n');//discard delimitation string
-		while (!users.eof())//extract travelers
-		{
-			travi++;//count number of travelers
-			strtotraveler(readLine(users, line), t);
-			travelers_array = install_new_data<traveler>(travelers_array, travi,t );//add space to travelers array and insert new traveler
-		}
+		cout << "Error at allocation" << endl;
+		exit(1);
 	}
-	users.close();//at end of file- after extraction
+
+	for (int i = 0; i < t_size; ++i)
+	{
+		fsIn >> newTrav[i].id >> newTrav[i].f_name >> newTrav[i].l_name >> newTrav[i].password >> newTrav[i].email >> newTrav[i].p_num;
+	}
+	fsIn.close();
+
+	for (int i = 0; i < t_size; ++i)
+		p_newTrav[i] = &newTrav[i];
+	return p_newTrav;
 }
 
-reservation** read_reservation(int &r_size)
+landlord** readLandlords(int& l_size)
 {
-//function extracting reservations from data base 
-// returns all reservations data from data base on reservations array
-	
-	ifstream reservations("reservationDB.csv");// file pointer Open an existing file 
-	if (!reservations.is_open())//if open failed
+	ifstream fsIn("C:/Users/User/source/repos/mon-rent/usersDB.txt");  // open the file
+	if (!fsIn.is_open())   // failed at opening
+	{
+		cout << "failed at opening file" << endl;
+		exit(1);
+	}
+	string temp;
+	do {
+		fsIn >> temp;
+	} while (temp != "$");
+	fsIn >> l_size;
+	landlord* newLand = new landlord[l_size];
+	landlord** p_newLand = new landlord * [l_size];
+	if (!newLand)
+	{
+		cout << "Error at allocation" << endl;
+		exit(1);
+	}
+
+	string temp_due;
+
+	for (int i = 0; i < l_size; ++i)
+	{
+		fsIn >> newLand[i].info.id;
+		fsIn >> newLand[i].info.f_name;
+		fsIn >> newLand[i].info.l_name;
+		fsIn >> newLand[i].info.password;
+		fsIn >> newLand[i].info.email;
+		fsIn >> newLand[i].info.p_num;
+		fsIn >> newLand[i].transfer.card_num;
+		fsIn >> newLand[i].transfer.cvv;
+		fsIn >> temp_due;
+		newLand[i].transfer.due = stringtodate(temp_due);
+	}
+	fsIn.close();
+
+	for (int i = 0; i < l_size; ++i)
+		p_newLand[i] = &newLand[i];
+	return p_newLand;
+}
+reservation** read_reservation(int& r_size)
+{
+	//function extracting reservations from data base 
+	// returns all reservations data from data base on reservations array
+
+	ifstream reservations("C:/Users/User/source/repos/mon-rent/reservationDB.txt");// file pointer Open an existing file 
+	if (!reservations)//if open failed
 	{
 		cout << "ERROR USERS FILE DOES NOT EXIST" << endl;//error messege
 		exit(1);//get out of system
 	}
-	string line[18];
-	reservation** rList = NULL;
-	reservation re;
-	reservation* r = &re;
-	while (!reservations.eof())
+	string checkin, checkout;
+	reservations >> r_size;
+	reservation* rList = new reservation[r_size];
+	for (int i = 0; i < r_size; i++)
 	{
-		r_size++;
-		strtores(readLine(reservations, line), r);
-		rList = install_new_data<reservation>(rList, r_size,r);//manual memory reallocation and inserting last property extracted from file
+		reservations >> rList[i].p_name;
+		reservations >> rList[i].renter_id;
+		reservations >> checkin;
+		reservations >> checkout;
+		reservations >> rList[i].loc;
+		reservations >> rList[i].rate;
+		reservations >> rList[i].israted;
+
+		rList[i].check_in = stringtodate(checkin);
+		rList[i].check_out = stringtodate(checkout);
 	}
+	reservation** p_rList = new reservation * [r_size];
+	for (int i = 0; i < r_size; i++)
+		p_rList[i] = &rList[i];
 	reservations.close();
-	return rList;
+	return p_rList;
 }
 property** read_properties(int& p_size)
 {
-	ifstream proper("propertiesDB.csv");// file pointer Open an existing file 
+	ifstream proper("C:/Users/User/source/repos/mon-rent/propertiesDB.txt");// file pointer Open an existing file 
 	if (!proper.is_open())//if open failed
 	{
 		cout << "ERROR USERS FILE DOES NOT EXIST" << endl;//error messege
 		exit(1);//get out of system
 	}
-
-	property** pList = NULL;//initializing property array
-	string line[18];
-	property pr;
-	property* p=&pr;
-	while (!proper.eof())
+	proper >> p_size;
+	property* pList = new property[p_size];//initializing property array
+	string amenities[10];
+	for (int i = 0; i < p_size; i++)
 	{
-		p_size++;
-		strtopro(readLine(proper, line), p);
-		pList = install_new_data<property>(pList, p_size,p );
+		proper >> pList[i].owner_id >> pList[i].description >> pList[i].p_name >> pList[i].location >> pList[i].price >> pList[i].capacity >> pList[i].near;
+		for (int j = 0; j < 10; j++)
+			proper >> pList[i].amenities[j];
+		proper >> pList[i].status >> pList[i].num_of_rates;
 	}
+	property** p_pList = new property * [p_size];
+	for (int i = 0; i < p_size; i++)
+		p_pList[i] = &pList[i];
 	proper.close();
-	return pList;
+	return p_pList;
 }
-
 
 //--- SUB-FUNCTIONS FOR FILES---//
 string* readLine(ifstream& fp,string line[18])
@@ -186,29 +230,51 @@ string datetostring(date d)//to format dd/mm/yy
 
 
 //---WRITE FUNCTIONS--//
-void write_users(landlord** landlords, int landi, traveler** travelers, int travi)
+void writeUsers(traveler** travelers, int& size_tra, landlord** landlords, int& size_land)
 {
-	ofstream p_users;//pointer to write into file
-	p_users.open("newUsersDB.csv", ios::out || ios::app);//create a file
-	for (int i = 0; i < landi; i++)
+	ofstream fsOut("C:/Users/User/source/repos/mon-rent/NewUsersDB.txt");   //open file for writing
+	if (!fsOut)
 	{
-		p_users << travelertostr(&landlords[i]->info, landi)
-			<< landlords[i]->transfer.card_num << ','
-			<< datetostring(landlords[i]->transfer.due) << ','
-			<< landlords[i]->transfer.cvv << ','
-			<< "\n";
+		cout << "failed at opening file" << endl;
+		exit(1);
 	}
-	p_users << "$\n";//inserting delimiter
-	for (int i = 0; i < travi; i++)
-		p_users << travelertostr(travelers[i], travi)<<'\n';
-	p_users.close();
+
+
+	//if opening file succeeded
+	fsOut << size_tra << ' ';//prints size of traveler array
+
+	for (int i = 0; i < size_tra; ++i) {
+		fsOut << travelers[i]->id << ' '
+			<< travelers[i]->f_name << ' '
+			<< travelers[i]->l_name << ' '
+			<< travelers[i]->password << ' '
+			<< travelers[i]->email << ' '
+			<< travelers[i]->p_num << ' '
+			<< "$" << " ";
+	}
+
+	string due_month, due_year;
+	fsOut << size_land;   // print size of landlord array
+	for (int i = 0; i < size_land; ++i) {
+		due_month = to_string(landlords[i]->transfer.due.month);
+		due_year = to_string(landlords[i]->transfer.due.year);
+		fsOut << landlords[i]->info.id << " "
+			<< landlords[i]->info.f_name << " "
+			<< landlords[i]->info.l_name << " "
+			<< landlords[i]->info.password << " "
+			<< landlords[i]->info.email << " "
+			<< landlords[i]->info.p_num << " "
+			<< landlords[i]->transfer.card_num << " "
+			<< landlords[i]->transfer.cvv << " "
+			<< "00/" << due_month << "/" << due_year << " ";
+	}
+	fsOut.close();//close file
 	// removing the old file 
-	remove("usersDB.csv");
+	remove("C:/Users/User/source/repos/mon-rent/usersDB.txt");
 
 	// renaming the updated file with the old file name 
-	rename("newUsersDB.csv", "usersDB.csv");
+	rename("C:/Users/User/source/repos/mon-rent/NewUsersDB.txt", "C:/Users/User/source/repos/mon-rent/usersDB.txt");
 }
-
 string travelertostr(traveler* t, int size)
 {//traveler data inserted to string for file
 	string tinput;
@@ -218,44 +284,43 @@ string travelertostr(traveler* t, int size)
 void write_reservations(reservation** reservations, int r_size)
 {
 	ofstream p_reservation;//pointer to write into file
-	p_reservation.open("newReservationDB.csv", ios::out || ios::app); //create a file
+	p_reservation.open("C:/Users/User/source/repos/mon-rent/newReservationDB.txt"); //create a file
+	p_reservation << r_size << ' ';
 	for (int i = 0; i < r_size; i++)
 	{
-		p_reservation << reservations[i]->p_name << ','
-			<< reservations[i]->renter_id << ','
-			<< datetostring(reservations[i]->check_in) << ','
-			<< datetostring(reservations[i]->check_out) << ','
-			<< reservations[i]->loc << ','
-			<< reservations[i]->rate << ','
-			<< reservations[i]->israted << ','
-			<< "\n";
+		p_reservation << reservations[i]->p_name << ' '
+			<< reservations[i]->renter_id << ' '
+			<< datetostring(reservations[i]->check_in) << ' '
+			<< datetostring(reservations[i]->check_out) << ' '
+			<< reservations[i]->loc << ' '
+			<< reservations[i]->rate << ' '
+			<< reservations[i]->israted << ' ';
 	}
 	p_reservation.close();
 	// removing the old file 
-	remove("reservationDB.csv");
+	remove("C:/Users/User/source/repos/mon-rent/reservationDB.txt");
 
 	// renaming the updated file with the old file name 
-	rename("newReservationDB.csv", "reservationDB.csv");
-
+	rename("C:/Users/User/source/repos/mon-rent/newReservationDB.txt", "C:/Users/User/source/repos/mon-rent/reservationDB.txt");
 }
 void write_properties(property** properties, int p_size)
 {
 	fstream p_prop;//pointer to write into file
-	p_prop.open("newPropertiesDB.csv", ios::out || ios::app); //create a file
+	p_prop.open("C:/Users/User/source/repos/mon-rent/newPropertiesDB.txt"); //create a file
+	p_prop << p_size << ' ';
 	for (int i = 0; i < p_size; i++)
 	{
-		p_prop << properties[i]->owner_id << ','
-			<< properties[i]->description << ','
-			<< properties[i]->p_name << ','
-			<< properties[i]->location << ','
-			<< properties[i]->price << ','
-			<< properties[i]->capacity << ','
-			<< properties[i]->near << ',';
+		p_prop << properties[i]->owner_id << ' '
+			<< properties[i]->description << ' '
+			<< properties[i]->p_name << ' '
+			<< properties[i]->location << ' '
+			<< properties[i]->price << ' '
+			<< properties[i]->capacity << ' '
+			<< properties[i]->near << ' ';
 		for (int j = 0; j < 10; j++)
-			p_prop << properties[i]->amenities[j] << ',';
-		p_prop << properties[i]->status << ','
-			<< properties[i]->num_of_rates << ','
-			<< "\n";
+			p_prop << properties[i]->amenities[j] << ' ';
+		p_prop << properties[i]->status << ' '
+			<< properties[i]->num_of_rates << ' ';
 	}
 	p_prop.close();
 	// removing the old file 
@@ -264,7 +329,6 @@ void write_properties(property** properties, int p_size)
 	// renaming the updated file with the old file name 
 	rename("newPropertiesDB.csv", "propertiesDB.csv");
 }
-
 
 traveler* traveler_login(traveler** travelers, int sizet)
 {
@@ -1396,11 +1460,10 @@ void mainMenu()
 	int size_pro = 0;        // the size of the reservations property
 
 	// reading from files
-	read_users(landlords, size_land, travelers , size_travel);   // initialize users arrays
+	travelers = readTravelers(size_travel);// initialize users arrays
+	landlords = readLandlords(size_land);
 	reservations = read_reservation(size_res);   // initialize reservations array
 	properties = read_properties(size_pro);  // initialize properties array
-
-
 	int choice;    // keep the choice from the menu
 	int flag;   // indicate if the user want to
 	landlord* user1 = NULL;

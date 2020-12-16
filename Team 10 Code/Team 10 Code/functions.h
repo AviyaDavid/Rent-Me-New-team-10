@@ -3,7 +3,8 @@
 #include "Structs.h"
 
 //--- READ FROM FILES---//
-void read_users(landlord** landlords_array, int& landi, traveler** travelers_array, int& travi);//reads from users data base and inserting into arrays the data from file
+landlord** readLandlords(int& l_size);
+traveler** readTravelers(int& t_size);
 reservation** read_reservation(int &r_size);//reads from reservations data base and returns array with data from file
 property** read_properties(int& p_size);//reads from properties data base and returns array with data from file
 

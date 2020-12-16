@@ -1,0 +1,4 @@
+﻿  functions.cpp
+C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\Team 10 Code\functions.cpp(728): warning C4715: 'search': not all control paths return a value
+functions.obj : error LNK2019: unresolved external symbol "void __cdecl write_users(struct landlord * *,int,struct traveler * *,int)" (?write_users@@YAXPEAPEAUlandlord@@HPEAPEAUtraveler@@H@Z) referenced in function "void __cdecl mainMenu(void)" (?mainMenu@@YAXXZ)
+C:\Users\yossi\Documents\Rent-Me-New-team-10\Team 10 Code\x64\Debug\Team 10 Code.exe : fatal error LNK1120: 1 unresolved externals
