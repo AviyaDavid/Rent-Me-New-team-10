@@ -80,7 +80,7 @@ int compDates(date a, date b);
 
 void mainMenu();
 
-bool loginMenu();
+int loginMenu();
 
 void travelerMenu(traveler* user, traveler** travelers, int& size_travel, landlord** landlords, int& size_land, reservation** reservations, int& size_res, property** properties, int& size_pro);
 

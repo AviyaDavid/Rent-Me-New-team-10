@@ -502,7 +502,7 @@ landlord* landlord_signup(landlord** landlords, traveler** travelers , int* size
 		cout << "Year: ";
 		cin >> new_lanlord.transfer.due.year;
 	}
-	cout << "CVV: " << endl;
+	cout << "CVV: ";
 	cin >> new_lanlord.transfer.cvv;
 	while (new_lanlord.transfer.cvv.length() != 3)
 	{
@@ -1451,16 +1451,16 @@ void mainMenu()
 	} while (choice != 3);   // do as long as the user didnt choose exit
 }
 
-bool loginMenu()
+int loginMenu()
 // let the user choose between login to signup, return 1 for login and 2 for signup
 {
-	int choice;   // keep the choice
+	int ch;   // keep the choice
 	do {
 		cout << "Please enter your choice:" << endl;
 		cout << "1 - login" << endl << "2 - signup" << endl;
-		cin >> choice;
-	} while (choice != 1 && choice != 2);
-	return choice;
+		cin >> ch;
+	} while (ch != 1 && ch != 2);
+	return ch;
 }
 
 
@@ -1511,7 +1511,7 @@ void travelerMenu(traveler* user, traveler** travelers, int& size_travel, landlo
 		// print traveler menu
 		cout << "Traveler Menu" << endl;
 		cout << "1 - Make reservation" << endl;
-		cout << "1 - View reservation history  " << endl;
+		cout << "2 - View reservation history  " << endl;
 		cout << "3 - Logout" << endl;
 		cin >> choice;
 		switch (choice)   // activate chosen option
